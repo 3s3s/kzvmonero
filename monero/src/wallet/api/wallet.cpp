@@ -1075,7 +1075,8 @@ bool WalletImpl::daemonSynced() const
     if(connected() == Wallet::ConnectionStatus_Disconnected)
         return false;
     uint64_t blockChainHeight = daemonBlockChainHeight();
-    return (blockChainHeight >= daemonBlockChainTargetHeight() && blockChainHeight > 1);
+//    return (blockChainHeight >= daemonBlockChainTargetHeight() && blockChainHeight > 1); ////KZV////
+    return blockChainHeight >= daemonBlockChainTargetHeight();
 }
 
 bool WalletImpl::synchronized() const
