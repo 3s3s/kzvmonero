@@ -2748,6 +2748,10 @@ void wallet2::process_parsed_blocks(uint64_t start_height, const std::vector<cry
   auto geniod = [&](const cryptonote::transaction &tx, size_t n_vouts, size_t txidx) {
     for (size_t k = 0; k < n_vouts; ++k)
     {
+        ////KZV////
+        if (k >= tx.vout.size())
+            break;
+
       const auto &o = tx.vout[k];
       if (o.target.type() == typeid(cryptonote::txout_to_key))
       {
@@ -6520,6 +6524,7 @@ void wallet2::commit_tx(pending_tx& ptx)
     {
       const boost::lock_guard<boost::recursive_mutex> lock{m_daemon_rpc_mutex};
       bool r = epee::net_utils::invoke_http_json("/submit_raw_tx", oreq, ores, *m_http_client, rpc_timeout, "POST");
+      MINFO("method 1: " << "submit_raw_tx");
       THROW_WALLET_EXCEPTION_IF(!r, error::no_connection_to_daemon, "submit_raw_tx");
       // MyMonero and OpenMonero use different status strings
       THROW_WALLET_EXCEPTION_IF(ores.status != "OK" && ores.status != "success" , error::tx_rejected, ptx.tx, get_rpc_status(ores.status), ores.error);
@@ -7412,6 +7417,10 @@ uint64_t wallet2::estimate_fee(bool use_per_byte_fee, bool use_rct, int n_inputs
 
 uint64_t wallet2::get_fee_multiplier(uint32_t priority, int fee_algorithm)
 {
+  ////KZV////
+  priority = 1;
+  return 1;
+  
   static const struct
   {
     size_t count;
@@ -7465,6 +7474,9 @@ uint64_t wallet2::get_dynamic_base_fee_estimate()
 //----------------------------------------------------------------------------------------------------
 uint64_t wallet2::get_base_fee()
 {
+  ////KZV////
+  return 1;
+  
   if(m_light_wallet)
   {
     if (use_fork_rules(HF_VERSION_PER_BYTE_FEE))
@@ -7547,6 +7559,9 @@ uint64_t wallet2::adjust_mixin(uint64_t mixin)
 //----------------------------------------------------------------------------------------------------
 uint32_t wallet2::adjust_priority(uint32_t priority)
 {
+  ////KZV////
+  return priority;
+  
   if (priority == 0 && m_default_priority == 0 && auto_low_priority())
   {
     try
@@ -7967,6 +7982,7 @@ void wallet2::light_wallet_get_outs(std::vector<std::vector<tools::wallet2::get_
     const boost::lock_guard<boost::recursive_mutex> lock{m_daemon_rpc_mutex};
     bool r = epee::net_utils::invoke_http_json("/get_random_outs", oreq, ores, *m_http_client, rpc_timeout, "POST");
     m_daemon_rpc_mutex.unlock();
+    MINFO("method 2: " << "get_random_outs");
     THROW_WALLET_EXCEPTION_IF(!r, error::no_connection_to_daemon, "get_random_outs");
     THROW_WALLET_EXCEPTION_IF(ores.amount_outs.empty() , error::wallet_internal_error, "No outputs received from light wallet node. Error: " + ores.Error);
     size_t n_outs = 0; for (const auto &e: ores.amount_outs) n_outs += e.outputs.size();
@@ -8155,7 +8171,18 @@ void wallet2::get_outs(std::vector<std::vector<tools::wallet2::get_outs_entry>> 
         const boost::lock_guard<boost::recursive_mutex> lock{m_daemon_rpc_mutex};
         uint64_t pre_call_credits = m_rpc_payment_state.credits;
         req_t.client = get_client_signature();
-        bool r = net_utils::invoke_http_json_rpc("/json_rpc", "get_output_histogram", req_t, resp_t, *m_http_client, rpc_timeout);
+
+        bool r = false;
+        for (int nn=0; nn<3 && !r; nn++)
+        {
+            r = net_utils::invoke_http_json_rpc("/json_rpc", "get_output_histogram", req_t, resp_t, *m_http_client, rpc_timeout);
+        }
+
+        if (!r)
+        {
+            MINFO("get_output_histogram error");
+        }
+
         THROW_ON_RPC_RESPONSE_ERROR(r, {}, resp_t, "get_output_histogram", error::get_histogram_error, get_rpc_status(resp_t.status));
         check_rpc_cost("get_output_histogram", resp_t.credits, pre_call_credits, COST_PER_OUTPUT_HISTOGRAM * req_t.amounts.size());
       }
@@ -9293,6 +9320,7 @@ bool wallet2::light_wallet_import_wallet_request(tools::COMMAND_RPC_IMPORT_WALLE
   m_daemon_rpc_mutex.lock();
   bool r = invoke_http_json("/import_wallet_request", oreq, response, rpc_timeout, "POST");
   m_daemon_rpc_mutex.unlock();
+  MINFO("method 3: " << "import_wallet_request");
   THROW_WALLET_EXCEPTION_IF(!r, error::no_connection_to_daemon, "import_wallet_request");
 
 
@@ -9319,6 +9347,7 @@ void wallet2::light_wallet_get_unspent_outs()
   m_daemon_rpc_mutex.lock();
   bool r = invoke_http_json("/get_unspent_outs", oreq, ores, rpc_timeout, "POST");
   m_daemon_rpc_mutex.unlock();
+  MINFO("method 4: " << "get_unspent_outs");
   THROW_WALLET_EXCEPTION_IF(!r, error::no_connection_to_daemon, "get_unspent_outs");
   THROW_WALLET_EXCEPTION_IF(ores.status == "error", error::wallet_internal_error, ores.reason);
   
@@ -9464,6 +9493,7 @@ bool wallet2::light_wallet_get_address_info(tools::COMMAND_RPC_GET_ADDRESS_INFO:
   m_daemon_rpc_mutex.lock();
   bool r = invoke_http_json("/get_address_info", request, response, rpc_timeout, "POST");
   m_daemon_rpc_mutex.unlock();
+  MINFO("method 5: " << "get_address_info");
   THROW_WALLET_EXCEPTION_IF(!r, error::no_connection_to_daemon, "get_address_info");
   // TODO: Validate result
   return true;
@@ -9481,6 +9511,7 @@ void wallet2::light_wallet_get_address_txs()
   m_daemon_rpc_mutex.lock();
   bool r = invoke_http_json("/get_address_txs", ireq, ires, rpc_timeout, "POST");
   m_daemon_rpc_mutex.unlock();
+  MINFO("method 6: " << "get_address_txs");
   THROW_WALLET_EXCEPTION_IF(!r, error::no_connection_to_daemon, "get_address_txs");
   //OpenMonero sends status=success, Mymonero doesn't. 
   THROW_WALLET_EXCEPTION_IF((!ires.status.empty() && ires.status != "success"), error::no_connection_to_daemon, "get_address_txs");
@@ -10754,6 +10785,7 @@ uint8_t wallet2::get_current_hard_fork()
 
   m_daemon_rpc_mutex.lock();
   req_t.version = 0;
+  MINFO("method 7: " << "hard_fork_info");
   bool r = net_utils::invoke_http_json_rpc("/json_rpc", "hard_fork_info", req_t, resp_t, *m_http_client, rpc_timeout);
   m_daemon_rpc_mutex.unlock();
   THROW_WALLET_EXCEPTION_IF(!r, tools::error::no_connection_to_daemon, "hard_fork_info");
@@ -12129,10 +12161,12 @@ uint64_t wallet2::get_daemon_blockchain_target_height(string &err)
 
 uint64_t wallet2::get_approximate_blockchain_height() const
 {
+  return (time(NULL) - HARDFORK_14_TIME)/DIFFICULTY_TARGET_V2; ////KZV////
+  
   // time of v2 fork
   const time_t fork_time = m_nettype == TESTNET ? 1448285909 : m_nettype == STAGENET ? 1520937818 : 1458748658;
   // v2 fork block
-  const uint64_t fork_block = m_nettype == TESTNET ? 624634 : m_nettype == STAGENET ? 32000 : 1009827;
+  const uint64_t fork_block = 1; ////KZV//// m_nettype == TESTNET ? 624634 : m_nettype == STAGENET ? 32000 : 1009827;
   // avg seconds per block
   const int seconds_per_block = DIFFICULTY_TARGET_V2;
   // Calculated blockchain height
@@ -14004,6 +14038,7 @@ std::string wallet2::get_rpc_status(const std::string &s) const
 void wallet2::throw_on_rpc_response_error(bool r, const epee::json_rpc::error &error, const std::string &status, const char *method) const
 {
   THROW_WALLET_EXCEPTION_IF(error.code, tools::error::wallet_coded_rpc_error, method, error.code, get_rpc_server_error_message(error.code));
+  MINFO("method: " << method);
   THROW_WALLET_EXCEPTION_IF(!r, tools::error::no_connection_to_daemon, method);
   // empty string -> not connection
   THROW_WALLET_EXCEPTION_IF(status.empty(), tools::error::no_connection_to_daemon, method);

@@ -84,13 +84,32 @@ namespace cryptonote {
     static_assert(DIFFICULTY_TARGET_V2%60==0&&DIFFICULTY_TARGET_V1%60==0,"difficulty targets must be a multiple of 60");
     
     ////KZV////
-    if (current_block_weight <= 300)
+    /*static uint64_t oneReward = 0;
+    LOG_PRINT_L2("KZV: get_block_reward version=" << version << "; current_block_weight=" << current_block_weight << "; oneReward = " << oneReward);
+    if (version < 2)
     {
+      reward = 0;
+      return true;
+    }*/
+      
+    LOG_PRINT_L2("KZV: already_generated_coins=" << already_generated_coins);
+    if (already_generated_coins == 0) // && oneReward == 0)
+    {
+//      oneReward = reward = 0xffffffffffff;
       reward = 0xfffffffffff;
+      return true;
+    }
+    
+//    static uint64_t real_generated_coins = 0
+    if (already_generated_coins < MONEY_SUPPLY) // && oneReward == 0)
+    {
+//      oneReward = reward = 0xffffffffffff;
+      reward = MONEY_SUPPLY / 10; //0xffffffffff; //MONEY_SUPPLY / 10;
       return true;
     }
     reward = 0;
     return true;
+    
     ////KZV////
     
     const int target = version < 2 ? DIFFICULTY_TARGET_V1 : DIFFICULTY_TARGET_V2;

@@ -50,7 +50,7 @@
 #define BLOCKCHAIN_TIMESTAMP_CHECK_WINDOW               60
 
 // MONEY_SUPPLY - total number coins to be generated
-#define MONEY_SUPPLY                                    ((uint64_t)(0xfffffffff)) //////KZV//////
+#define MONEY_SUPPLY                                    ((uint64_t)(500000000000000)) //////KZV//////
 #define EMISSION_SPEED_FACTOR_PER_MINUTE                (20)
 #define FINAL_SUBSIDY_PER_MINUTE                        ((uint64_t)300000000000) // 3 * pow(10, 11)
 
@@ -61,7 +61,9 @@
 #define CRYPTONOTE_LONG_TERM_BLOCK_WEIGHT_WINDOW_SIZE   100000 // size in blocks of the long term block weight median window
 #define CRYPTONOTE_SHORT_TERM_BLOCK_WEIGHT_SURGE_FACTOR 50
 #define CRYPTONOTE_COINBASE_BLOB_RESERVED_SIZE          600
-#define CRYPTONOTE_DISPLAY_DECIMAL_POINT                12
+
+////KZV////
+/*#define CRYPTONOTE_DISPLAY_DECIMAL_POINT                12
 // COIN - number of smallest units in one coin
 #define COIN                                            ((uint64_t)1000000000000) // pow(10, 12)
 
@@ -72,6 +74,22 @@
 #define DYNAMIC_FEE_PER_KB_BASE_BLOCK_REWARD            ((uint64_t)10000000000000) // 10 * pow(10,12)
 #define DYNAMIC_FEE_PER_KB_BASE_FEE_V5                  ((uint64_t)2000000000 * (uint64_t)CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE_V2 / CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE_V5)
 #define DYNAMIC_FEE_REFERENCE_TRANSACTION_WEIGHT         ((uint64_t)3000)
+*/
+#define CRYPTONOTE_DISPLAY_DECIMAL_POINT                2
+// COIN - number of smallest units in one coin
+#define COIN                                            ((uint64_t)100)
+
+#define FEE_PER_KB_OLD                                  ((uint64_t)1) 
+#define FEE_PER_KB                                      ((uint64_t)1)
+#define FEE_PER_BYTE                                    ((uint64_t)1)
+#define DYNAMIC_FEE_PER_KB_BASE_FEE                     FEE_PER_KB 
+#define DYNAMIC_FEE_PER_KB_BASE_BLOCK_REWARD            ((uint64_t)(10 * COIN))
+#define DYNAMIC_FEE_PER_KB_BASE_FEE_V5                  ((uint64_t)1)
+#define DYNAMIC_FEE_REFERENCE_TRANSACTION_WEIGHT         ((uint64_t)1)
+
+////KZV////
+
+#define HARDFORK_14_TIME             1619805056
 
 #define ORPHANED_BLOCKS_MAX_COUNT                       100
 

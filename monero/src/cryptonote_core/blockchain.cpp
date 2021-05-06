@@ -1397,6 +1397,7 @@ bool Blockchain::validate_miner_transaction(const block& b, size_t cumulative_bl
     MERROR_VER("coinbase transaction spend too much money (" << print_money(money_in_use) << "). Block reward is " << print_money(base_reward + fee) << "(" << print_money(base_reward) << "+" << print_money(fee) << "), cumulative_block_weight " << cumulative_block_weight);
     return false;
   }
+  LOG_PRINT_L3("KZV 2 Blockchain::" << __func__ << "; version=" << version << "; base_reward=" << base_reward);
   // From hard fork 2 till 12, we allow a miner to claim less block reward than is allowed, in case a miner wants less dust
   if (version < 2 || version >= HF_VERSION_EXACT_COINBASE)
   {
@@ -1408,6 +1409,8 @@ bool Blockchain::validate_miner_transaction(const block& b, size_t cumulative_bl
   }
   else
   {
+    LOG_PRINT_L3("KZV 2 Blockchain::" << __func__ << "; base_reward=" << base_reward << "; money_in_use=" << money_in_use << "; fee=" << fee);
+    
     // from hard fork 2, since a miner can claim less than the full block reward, we update the base_reward
     // to show the amount of coins that were actually generated, the remainder will be pushed back for later
     // emission. This modifies the emission curve very slightly.
@@ -1917,6 +1920,8 @@ bool Blockchain::handle_alternative_block(const block& b, const crypto::hash& id
     uint64_t block_reward = get_outs_money_amount(b.miner_tx);
     const uint64_t prev_generated_coins = alt_chain.size() ? prev_data.already_generated_coins : m_db->get_block_already_generated_coins(prev_height);
     bei.already_generated_coins = (block_reward < (MONEY_SUPPLY - prev_generated_coins)) ? prev_generated_coins + block_reward : MONEY_SUPPLY;
+    
+    MINFO("KZV 2: bei.already_generated_coins" << bei.already_generated_coins);
 
     // verify that the block's timestamp is within the acceptable range
     // (not earlier than the median of the last X blocks)
@@ -4308,7 +4313,10 @@ leave:
   // coins will eventually exceed MONEY_SUPPLY and overflow a uint64. To prevent overflow, cap already_generated_coins
   // at MONEY_SUPPLY. already_generated_coins is only used to compute the block subsidy and MONEY_SUPPLY yields a
   // subsidy of 0 under the base formula and therefore the minimum subsidy >0 in the tail state.
+  MINFO("KZV 2: already_generated_coins 1: " << already_generated_coins);
   already_generated_coins = base_reward < (MONEY_SUPPLY-already_generated_coins) ? already_generated_coins + base_reward : MONEY_SUPPLY;
+  MINFO("KZV 2: already_generated_coins 2: " << already_generated_coins);
+  
   if(blockchain_height)
     cumulative_difficulty += m_db->get_block_cumulative_difficulty(blockchain_height - 1);
 

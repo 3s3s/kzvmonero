@@ -665,7 +665,7 @@ ApplicationWindow {
         if (firstBlockSeen == 0 && dTargetBlock != 1) {
             firstBlockSeen = dCurrentBlock;
         }
-        daemonSynced = dCurrentBlock >= dTargetBlock && dTargetBlock != 1
+        daemonSynced = dCurrentBlock >= dTargetBlock////KZV//// && dTargetBlock != 1
         walletSynced = bcHeight >= dTargetBlock
 
         // Update progress bars
@@ -820,17 +820,17 @@ ApplicationWindow {
         transaction = pendingTransaction;
         // validate address;
         if (transaction.status !== PendingTransaction.Status_Ok) {
-            console.error("Can't create transaction: ", transaction.errorString);
+            console.error("Can't create transaction 1: ", transaction.errorString);
             if (currentWallet.connected() == Wallet.ConnectionStatus_WrongVersion) {
-                txConfirmationPopup.errorText.text  = qsTr("Can't create transaction: Wrong daemon version: ") + transaction.errorString
+                txConfirmationPopup.errorText.text  = qsTr("Can't create transaction 2: Wrong daemon version: ") + transaction.errorString
             } else {
-                txConfirmationPopup.errorText.text  = qsTr("Can't create transaction: ") + transaction.errorString
+                txConfirmationPopup.errorText.text  = qsTr("Can't create transaction 3: ") + transaction.errorString
             }
             // deleting transaction object, we don't want memleaks
             currentWallet.disposeTransaction(transaction);
 
         } else if (transaction.txCount == 0) {
-            console.error("Can't create transaction: ", transaction.errorString);
+            console.error("Can't create transaction 4: ", transaction.errorString);
             txConfirmationPopup.errorText.text   = qsTr("No unmixable outputs to sweep") + translationManager.emptyString
             // deleting transaction object, we don't want memleaks
             currentWallet.disposeTransaction(transaction);
@@ -915,8 +915,8 @@ ApplicationWindow {
         txConfirmationPopup.sweepUnmixable = true;
         transaction = currentWallet.createSweepUnmixableTransaction();
         if (transaction.status !== PendingTransaction.Status_Ok) {
-            console.error("Can't create transaction: ", transaction.errorString);
-            txConfirmationPopup.errorText.text  = qsTr("Can't create transaction: ") + transaction.errorString + translationManager.emptyString
+            console.error("Can't create transaction 5: ", transaction.errorString);
+            txConfirmationPopup.errorText.text  = qsTr("Can't create transaction 6: ") + transaction.errorString + translationManager.emptyString
             // deleting transaction object, we don't want memleaks
             currentWallet.disposeTransaction(transaction);
 

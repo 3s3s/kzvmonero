@@ -537,7 +537,7 @@ void simple_wallet::handle_transfer_exception(const std::exception_ptr &e, bool 
     }
     catch (const tools::error::no_connection_to_daemon&)
     {
-      fail_msg_writer() << sw::tr("no connection to daemon. Please make sure daemon is running.");
+      fail_msg_writer() << sw::tr("no connection to daemon 1. Please make sure daemon is running.");
     }
     catch (const tools::error::daemon_busy&)
     {
@@ -2681,16 +2681,16 @@ bool simple_wallet::set_unit(const std::vector<std::string> &args/* = std::vecto
   const std::string &unit = args[1];
   unsigned int decimal_point = CRYPTONOTE_DISPLAY_DECIMAL_POINT;
 
-  if (unit == "monero")
+  if (unit == "Cbd")
     decimal_point = CRYPTONOTE_DISPLAY_DECIMAL_POINT;
-  else if (unit == "millinero")
-    decimal_point = CRYPTONOTE_DISPLAY_DECIMAL_POINT - 3;
-  else if (unit == "micronero")
+  else if (unit == "Cbc")
+    decimal_point = CRYPTONOTE_DISPLAY_DECIMAL_POINT - 2;
+  /*else if (unit == "micronero")
     decimal_point = CRYPTONOTE_DISPLAY_DECIMAL_POINT - 6;
   else if (unit == "nanonero")
     decimal_point = CRYPTONOTE_DISPLAY_DECIMAL_POINT - 9;
   else if (unit == "piconero")
-    decimal_point = 0;
+    decimal_point = 0;*/
   else
   {
     fail_msg_writer() << tr("invalid unit");
@@ -5845,7 +5845,7 @@ bool simple_wallet::refresh_main(uint64_t start_height, enum ResetType reset, bo
   }
   catch (const tools::error::no_connection_to_daemon&)
   {
-    ss << tr("no connection to daemon. Please make sure daemon is running.");
+    ss << tr("no connection to daemon 2. Please make sure daemon is running.");
   }
   catch (const tools::error::payment_required&)
   {
@@ -6186,7 +6186,7 @@ bool simple_wallet::rescan_spent(const std::vector<std::string> &args)
   }
   catch (const tools::error::no_connection_to_daemon&)
   {
-    fail_msg_writer() << tr("no connection to daemon. Please make sure daemon is running.");
+    fail_msg_writer() << tr("no connection to daemon 3. Please make sure daemon is running.");
   }
   catch (const tools::error::payment_required&)
   {

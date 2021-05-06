@@ -1524,7 +1524,7 @@ PendingTransaction *WalletImpl::createTransactionMultDest(const std::vector<stri
             // TODO: make it translatable with "tr"?
             setStatusError(tr("daemon is busy. Please try again later."));
         } catch (const tools::error::no_connection_to_daemon&) {
-            setStatusError(tr("no connection to daemon. Please make sure daemon is running."));
+            setStatusError(tr("no connection to daemon 1. Please make sure daemon is running."));
         } catch (const tools::error::wallet_rpc_error& e) {
             setStatusError(tr("RPC error: ") +  e.to_string());
         } catch (const tools::error::get_outs_error &e) {
@@ -1613,7 +1613,7 @@ PendingTransaction *WalletImpl::createSweepUnmixableTransaction()
             // TODO: make it translatable with "tr"?
             setStatusError(tr("daemon is busy. Please try again later."));
         } catch (const tools::error::no_connection_to_daemon&) {
-            setStatusError(tr("no connection to daemon. Please make sure daemon is running."));
+            setStatusError(tr("no connection to daemon 2. Please make sure daemon is running."));
         } catch (const tools::error::wallet_rpc_error& e) {
             setStatusError(tr("RPC error: ") +  e.to_string());
         } catch (const tools::error::get_outs_error&) {

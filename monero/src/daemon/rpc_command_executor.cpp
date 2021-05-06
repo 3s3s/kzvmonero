@@ -1361,6 +1361,8 @@ bool t_rpc_command_executor::start_mining(cryptonote::account_public_address add
   req.ignore_battery = ignore_battery;
   
   std::string fail_message = "Mining did not start";
+  
+  tools::success_msg_writer() <<  "t_rpc_command_executor::start_mining m_is_rpc=" << m_is_rpc; //=1
 
   if (m_is_rpc)
   {
@@ -1373,6 +1375,7 @@ bool t_rpc_command_executor::start_mining(cryptonote::account_public_address add
   {
     if (!m_rpc_server->on_start_mining(req, res) || res.status != CORE_RPC_STATUS_OK)
     {
+      tools::success_msg_writer() <<  "t_rpc_command_executor::start_mining failed: " << res.status;
       tools::fail_msg_writer() << make_error(fail_message, res.status);
       return true;
     }

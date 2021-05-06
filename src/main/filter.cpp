@@ -31,9 +31,9 @@
 #include <QKeyEvent>
 #include <QDebug>
 
-#ifdef QT_DEBUG
+/*#ifdef QT_DEBUG
     #include "private/qabstractanimation_p.h"
-#endif
+#endif*/
 
 filter::filter(QObject *parent) :
     QObject(parent)
@@ -91,7 +91,7 @@ bool filter::eventFilter(QObject *obj, QEvent *ev) {
     case QEvent::KeyRelease: {
         QKeyEvent *ke = static_cast<QKeyEvent*>(ev);
 
-#ifdef QT_DEBUG
+/*#ifdef QT_DEBUG
         if(ke->key() == Qt::Key_F9){
             QUnifiedTimer::instance()->setSlowModeEnabled(true);
             QUnifiedTimer::instance()->setSlowdownFactor(10);
@@ -104,7 +104,7 @@ bool filter::eventFilter(QObject *obj, QEvent *ev) {
 
             qDebug() << "Slow animations disabled";
         }
-#endif
+#endif*/
 
         if(ke->key() == Qt::Key_Backtab)
             m_backtabPressed = false;

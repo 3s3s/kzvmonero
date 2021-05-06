@@ -382,10 +382,10 @@ namespace cryptonote
   //------------------------------------------------------------------------------------------------------------------------------
   bool core_rpc_server::check_core_ready()
   {
-    if(!m_p2p.get_payload_object().is_synchronized())
+    /*if(!m_p2p.get_payload_object().is_synchronized())
     {
       return false;
-    }
+    }*/ ////KZV////
     return true;
   }
   //------------------------------------------------------------------------------------------------------------------------------

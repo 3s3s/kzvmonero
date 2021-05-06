@@ -30,6 +30,7 @@
 
 #include <stdint.h>
 #include <time.h>
+#include "../cryptonote_config.h"
 
 struct hardfork_t
 {
