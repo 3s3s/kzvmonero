@@ -678,6 +678,8 @@ namespace nodetool
     {
       full_addrs.insert("195.154.113.90:28180");
       full_addrs.insert("45.82.223.119:28180");
+      full_addrs.insert("84.16.225.164:28180");
+      full_addrs.insert("185.62.36.162:28180");
       //full_addrs.insert("212.83.172.165:28080");
       //full_addrs.insert("192.110.160.146:28080");
     }
@@ -685,6 +687,8 @@ namespace nodetool
     {
       full_addrs.insert("195.154.113.90:38180");
       full_addrs.insert("45.82.223.119:38180");
+      full_addrs.insert("84.16.225.164:38180");
+      full_addrs.insert("185.62.36.162:38180");
       //full_addrs.insert("192.110.160.146:38080");
     }
     else if (m_nettype == cryptonote::FAKECHAIN)
@@ -694,6 +698,9 @@ namespace nodetool
     {
       full_addrs.insert("195.154.113.90:18180");
       full_addrs.insert("45.82.223.119:18180");
+      full_addrs.insert("84.16.225.164:18180");
+      full_addrs.insert("185.62.36.162:18180");
+
       /*full_addrs.insert("212.83.172.165:18080");
       full_addrs.insert("192.110.160.146:18080");
       full_addrs.insert("88.198.163.90:18080");
