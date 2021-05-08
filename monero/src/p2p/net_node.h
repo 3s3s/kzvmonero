@@ -303,9 +303,10 @@ namespace nodetool
   private:
     const std::vector<std::string> m_seed_nodes_list =
     { "195.154.113.90",
-      "45.82.223.119",
-      "84.16.225.164",
-      "185.62.36.162"
+      "privnode.org",
+      "195.123.234.16",
+      "195.123.222.158",
+      "195.123.238.142"
     /*, "seeds.moneroseeds.ae.org"
     , "seeds.moneroseeds.ch"
     , "seeds.moneroseeds.li"*/
