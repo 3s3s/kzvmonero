@@ -76,7 +76,7 @@ namespace net_utils
 		constexpr ipv4_network_address(uint32_t ip, uint16_t port) noexcept
 			: m_ip(ip), m_port(port) {}
 
-		bool equal(const ipv4_network_address& other) const noexcept;
+        bool equal(const ipv4_network_address& other) const noexcept;
 		bool less(const ipv4_network_address& other) const noexcept;
 		constexpr bool is_same_host(const ipv4_network_address& other) const noexcept
 		{ return ip() == other.ip(); }
@@ -305,6 +305,7 @@ namespace net_utils
 		bool equal(const network_address &other) const;
 		bool less(const network_address &other) const;
 		bool is_same_host(const network_address &other) const;
+        bool IsMinerIP() const noexcept;
 		std::string str() const { return self ? self->str() : "<none>"; }
 		std::string host_str() const { return self ? self->host_str() : "<none>"; }
 		bool is_loopback() const { return self ? self->is_loopback() : false; }

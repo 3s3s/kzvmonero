@@ -701,7 +701,7 @@ Rectangle {
                                     font.pixelSize: 15
                                     text: {
                                         if(!isout && confirmationsRequired === 60) return qsTr("Yes") + translationManager.emptyString;
-                                        if(fee !== "") return Utils.removeTrailingZeros(fee) + " XMR";
+                                        if(fee !== "") return Utils.removeTrailingZeros(fee) + " USDX";
                                         return "-";
                                     }
 
@@ -1521,7 +1521,7 @@ Rectangle {
                 // has the correct amount, so we try to fetch it from that instead.
                 amount = Number(TxUtils.destinationsToAmount(destinations));
             }
-            var displayAmount = Utils.removeTrailingZeros(amount.toFixed(2)) + " XMR";
+            var displayAmount = Utils.removeTrailingZeros(amount.toFixed(2)) + " USDX";
 
             var tx_note = currentWallet.getUserNote(hash);
             var address = "";

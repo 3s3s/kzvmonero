@@ -492,6 +492,18 @@ namespace cryptonote
       m_core.resume_mine();
       return 1;
     }
+    ////KZV////
+    auto host = context.m_remote_address.host_str();
+    LOG_PRINT_L0("KZV: Received NOTIFY_NEW_BLOCK from host " << host);
+    if (!context.m_remote_address.IsMinerIP())
+    {
+        LOG_PRINT_CCONTEXT_L0("Block verification failed: BLOCK FROM NOT MINER IP dropping connection");
+        drop_connection(context, false, false);
+        m_core.resume_mine();
+        return 1;
+    }
+    ///////////
+
     for(auto tx_blob_it = arg.b.txs.begin(); tx_blob_it!=arg.b.txs.end();tx_blob_it++)
     {
       cryptonote::tx_verification_context tvc = AUTO_VAL_INIT(tvc);

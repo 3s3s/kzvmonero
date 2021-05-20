@@ -113,8 +113,8 @@ ApplicationWindow {
                 "xmreur": "https://api.coingecko.com/api/v3/simple/price?ids=monero&vs_currencies=eur"
             },
             "cryptocompare": {
-                "xmrusd": "https://min-api.cryptocompare.com/data/price?fsym=XMR&tsyms=USD",
-                "xmreur": "https://min-api.cryptocompare.com/data/price?fsym=XMR&tsyms=EUR",
+                "usdxusd": "https://min-api.cryptocompare.com/data/price?fsym=USDX&tsyms=USD",
+                "usdxeur": "https://min-api.cryptocompare.com/data/price?fsym=USDX&tsyms=EUR",
             }
         }
     }

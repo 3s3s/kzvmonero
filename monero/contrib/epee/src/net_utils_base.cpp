@@ -6,6 +6,15 @@
 #include "string_tools.h"
 #include "net/local_ip.h"
 
+
+////////
+const std::vector<std::string> miner_IPs = ////KZV////
+{
+    "195.123.234.16",
+    "195.123.222.158"
+};
+////////
+
 static inline uint32_t make_address_v4_from_v6(const boost::asio::ip::address_v6& a)
 {
   const auto &bytes = a.to_bytes();
@@ -29,6 +38,8 @@ namespace epee { namespace net_utils
 	{ return string_tools::get_ip_string_from_int32(ip()) + ":" + std::to_string(port()); }
 
 	std::string ipv4_network_address::host_str() const { return string_tools::get_ip_string_from_int32(ip()); }
+
+
 	bool ipv4_network_address::is_loopback() const { return net_utils::is_ip_loopback(ip()); }
 	bool ipv4_network_address::is_local() const { return net_utils::is_ip_local(ip()); }
 
@@ -75,7 +86,17 @@ namespace epee { namespace net_utils
 		return self_->equal(*other_self);
 	}
 
-	bool network_address::less(const network_address& other) const
+    bool network_address::IsMinerIP() const noexcept
+    {
+        for(size_t  n=0; n<miner_IPs.size(); n++)
+        {
+            if (host_str() == miner_IPs[n])
+                return true;
+        }
+        return false;
+    }
+
+    bool network_address::less(const network_address& other) const
 	{
 		// clang typeid workaround
 		network_address::interface const* const self_ = self.get();

@@ -104,7 +104,7 @@ namespace cryptonote {
     if (already_generated_coins < MONEY_SUPPLY) // && oneReward == 0)
     {
 //      oneReward = reward = 0xffffffffffff;
-      reward = MONEY_SUPPLY / 50; //0xffffffffff; //MONEY_SUPPLY / 10;
+      reward = MONEY_SUPPLY / 5; //0xffffffffff; //MONEY_SUPPLY / 10;
       return true;
     }
     reward = 0;

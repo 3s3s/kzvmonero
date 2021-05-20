@@ -230,7 +230,7 @@ Rectangle {
                         if (persistentSettings.fiatPriceEnabled && persistentSettings.fiatPriceToggle) {
                             return appWindow.fiatApiCurrencySymbol();
                         } else {
-                            return "XMR"
+                            return "USDX"
                         }
                     }
                     color: MoneroComponents.Style.blackTheme ? "white" : "black"
@@ -262,9 +262,9 @@ Rectangle {
                     }
                     text: {
                         if (persistentSettings.fiatPriceEnabled && persistentSettings.fiatPriceToggle) {
-                            return balanceFiatString.split('.')[0] + "."
+                            return " "+balanceFiatString.split('.')[0] + "."
                         } else {
-                            return balanceString.split('.')[0] + "."
+                            return " "+balanceString.split('.')[0] + "."
                         }
                     }
                     font.pixelSize: {
