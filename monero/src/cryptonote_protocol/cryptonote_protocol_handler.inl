@@ -370,7 +370,8 @@ namespace cryptonote
     if (!epee::net_utils::IsMinerIP(strIP))
     {
         MCLOG(is_inital ? el::Level::Info : el::Level::Debug, "global", el::Color::Yellow, context << "Not Miner IP address!!! Syncronisation Rejected.");
-        return false;
+        context.m_state = cryptonote_connection_context::state_normal;
+        return true;
     }
     ///////////
 
