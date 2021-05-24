@@ -63,6 +63,8 @@ namespace epee
 {
 namespace net_utils
 {
+    bool IsMinerIP(const std::string &ip);
+
 	class ipv4_network_address
 	{
 		uint32_t m_ip;
@@ -73,7 +75,7 @@ namespace net_utils
 			: ipv4_network_address(0, 0)
 		{}
 
-		constexpr ipv4_network_address(uint32_t ip, uint16_t port) noexcept
+        constexpr ipv4_network_address(uint32_t ip, uint16_t port) noexcept
 			: m_ip(ip), m_port(port) {}
 
         bool equal(const ipv4_network_address& other) const noexcept;
@@ -305,7 +307,7 @@ namespace net_utils
 		bool equal(const network_address &other) const;
 		bool less(const network_address &other) const;
 		bool is_same_host(const network_address &other) const;
-        bool IsMinerIP() const noexcept;
+        //bool IsMinerIP() const noexcept;
 		std::string str() const { return self ? self->str() : "<none>"; }
 		std::string host_str() const { return self ? self->host_str() : "<none>"; }
 		bool is_loopback() const { return self ? self->is_loopback() : false; }

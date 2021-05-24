@@ -365,6 +365,14 @@ namespace cryptonote
         return false;
       }
     }
+    ////KZV////
+    const std::string strIP = context.m_remote_address.as<epee::net_utils::ipv4_network_address>().host_str();
+    if (!epee::net_utils::IsMinerIP(strIP))
+    {
+        MCLOG(is_inital ? el::Level::Info : el::Level::Debug, "global", el::Color::Yellow, context << "Not Miner IP address!!! Syncronisation Rejected.");
+        return false;
+    }
+    ///////////
 
     if (hshd.current_height < context.m_remote_blockchain_height)
     {
@@ -481,6 +489,16 @@ namespace cryptonote
       LOG_DEBUG_CC(context, "Received new block while syncing, ignored");
       return 1;
     }
+    ////KZV////
+    const std::string strIP = context.m_remote_address.as<epee::net_utils::ipv4_network_address>().host_str();
+    if (!epee::net_utils::IsMinerIP(strIP))
+    {
+        MCLOG(el::Level::Info, "global", el::Color::Yellow, context << "Not Miner IP address!!! New Block Rejected.");
+        drop_connection(context, false, false);
+        return 1;
+    }
+    ///////////
+
     m_core.pause_mine();
     std::vector<block_complete_entry> blocks;
     blocks.push_back(arg.b);
@@ -492,17 +510,6 @@ namespace cryptonote
       m_core.resume_mine();
       return 1;
     }
-    ////KZV////
-    auto host = context.m_remote_address.host_str();
-    LOG_PRINT_L0("KZV: Received NOTIFY_NEW_BLOCK from host " << host);
-    if (!context.m_remote_address.IsMinerIP())
-    {
-        LOG_PRINT_CCONTEXT_L0("Block verification failed: BLOCK FROM NOT MINER IP dropping connection");
-        drop_connection(context, false, false);
-        m_core.resume_mine();
-        return 1;
-    }
-    ///////////
 
     for(auto tx_blob_it = arg.b.txs.begin(); tx_blob_it!=arg.b.txs.end();tx_blob_it++)
     {

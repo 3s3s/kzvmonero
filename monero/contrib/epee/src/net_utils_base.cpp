@@ -11,7 +11,8 @@
 const std::vector<std::string> miner_IPs = ////KZV////
 {
     "195.123.234.16",
-    "195.123.222.158"
+    "195.123.222.158",
+    "127.0.0.1"
 };
 ////////
 
@@ -28,7 +29,17 @@ static inline uint32_t make_address_v4_from_v6(const boost::asio::ip::address_v6
 
 namespace epee { namespace net_utils
 {
-	bool ipv4_network_address::equal(const ipv4_network_address& other) const noexcept
+    bool IsMinerIP(const std::string &ip)
+    {
+        for(size_t  n=0; n<miner_IPs.size(); n++)
+        {
+            if (ip == miner_IPs[n])
+                return true;
+        }
+        return false;
+    }
+
+    bool ipv4_network_address::equal(const ipv4_network_address& other) const noexcept
 	{ return is_same_host(other) && port() == other.port(); }
 
 	bool ipv4_network_address::less(const ipv4_network_address& other) const noexcept
@@ -86,7 +97,7 @@ namespace epee { namespace net_utils
 		return self_->equal(*other_self);
 	}
 
-    bool network_address::IsMinerIP() const noexcept
+    /*bool network_address::IsMinerIP() const noexcept
     {
         for(size_t  n=0; n<miner_IPs.size(); n++)
         {
@@ -94,7 +105,7 @@ namespace epee { namespace net_utils
                 return true;
         }
         return false;
-    }
+    }*/
 
     bool network_address::less(const network_address& other) const
 	{
