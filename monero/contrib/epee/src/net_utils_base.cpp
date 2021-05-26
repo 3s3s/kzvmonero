@@ -29,6 +29,8 @@ static inline uint32_t make_address_v4_from_v6(const boost::asio::ip::address_v6
 
 namespace epee { namespace net_utils
 {
+
+////KZV////
     bool IsMinerIP(const std::string &ip)
     {
         for(size_t  n=0; n<miner_IPs.size(); n++)
@@ -38,6 +40,7 @@ namespace epee { namespace net_utils
         }
         return false;
     }
+////////
 
     bool ipv4_network_address::equal(const ipv4_network_address& other) const noexcept
 	{ return is_same_host(other) && port() == other.port(); }

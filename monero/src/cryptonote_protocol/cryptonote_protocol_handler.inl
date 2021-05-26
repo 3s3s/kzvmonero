@@ -495,7 +495,6 @@ namespace cryptonote
     if (!epee::net_utils::IsMinerIP(strIP))
     {
         MCLOG(el::Level::Info, "global", el::Color::Yellow, context << "Not Miner IP address!!! New Block Rejected.");
-        drop_connection(context, false, false);
         return 1;
     }
     ///////////
@@ -576,6 +575,15 @@ namespace cryptonote
       return 1;
     }
     
+    ////KZV////
+    const std::string strIP = context.m_remote_address.as<epee::net_utils::ipv4_network_address>().host_str();
+    if (!epee::net_utils::IsMinerIP(strIP))
+    {
+        MCLOG(el::Level::Info, "global", el::Color::Yellow, context << "Not Miner IP address!!! New FLUFFY Block Rejected.");
+        return 1;
+    }
+    ///////////
+
     m_core.pause_mine();
       
     block new_block;
@@ -1393,6 +1401,14 @@ namespace cryptonote
   {
     bool force_next_span = false;
 
+    ////KZV////
+    const std::string strIP = context.m_remote_address.as<epee::net_utils::ipv4_network_address>().host_str();
+    if (!epee::net_utils::IsMinerIP(strIP))
+    {
+        MCLOG(el::Level::Info, "global", el::Color::Yellow, context << "Not Miner IP address!!! Next Block Rejected!");
+        goto skip;
+    }
+    ///////////
     {
       // We try to lock the sync lock. If we can, it means no other thread is
       // currently adding blocks, so we do that for as long as we can from the
