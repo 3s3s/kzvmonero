@@ -157,7 +157,7 @@ namespace net_utils
 
     inline
 			try_connect_result_t try_connect(const std::string& addr, const std::string& port, std::chrono::milliseconds timeout)
-		{
+        {
 				m_deadline.expires_from_now(timeout);
 				boost::unique_future<boost::asio::ip::tcp::socket> connection = m_connector(addr, port, m_deadline);
 				for (;;)
@@ -201,9 +201,9 @@ namespace net_utils
 				{
 					MWARNING("Some problems at connect, expected open socket");
 					return CONNECT_FAILURE;
-				}
+                }
 
-		}
+        }
 
     inline
 			bool connect(const std::string& addr, const std::string& port, std::chrono::milliseconds timeout)

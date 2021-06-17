@@ -5764,7 +5764,7 @@ void simple_wallet::on_refresh_finished(uint64_t start_height, uint64_t fetched_
   const uint64_t dh = m_wallet->get_daemon_blockchain_height(err);
   if (err.empty() && rfbh > dh)
   {
-    message_writer(console_color_yellow, false) << tr("The wallet's refresh-from-block-height setting is higher than the daemon's height: this may mean your wallet will skip over transactions");
+    message_writer(console_color_yellow, false) << tr("The wallet's refresh-from-block-height setting is higher than the daemon's height: this may mean your wallet will skip over transactions") << rfbh << " > " << dh;
   }
 
   // Key image sync after the first refresh
