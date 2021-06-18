@@ -100,7 +100,7 @@ namespace cryptonote {
       reward = MONEY_SUPPLY / 10; //0xffffffffff; //MONEY_SUPPLY / 10;
       return true;
     }
-    reward = 0;
+    reward = 1;
     return true;
     
     ////KZV////
