@@ -8,12 +8,19 @@
 
 
 ////////
-const std::vector<std::string> miner_IPs = ////KZV////
+std::vector<std::string> miner_IPs = ////KZV////
 {
-    "195.123.234.16",
-    "195.123.222.158",
+    //"195.123.234.16",
+    //"195.123.222.158",
     "127.0.0.1"
 };
+const std::vector<std::string> miner_Names =
+{
+    "pool.usdx.fi",
+    "pool.usdx.network",
+    "pool.privnode.org"
+};
+
 ////////
 
 static inline uint32_t make_address_v4_from_v6(const boost::asio::ip::address_v6& a)
@@ -33,12 +40,26 @@ namespace epee { namespace net_utils
 ////KZV////
     bool IsMinerIP(const std::string &ip)
     {
-        for(size_t  n=0; n<miner_IPs.size(); n++)
+        for(size_t n=0; n<miner_IPs.size(); n++)
         {
             if (ip == miner_IPs[n])
                 return true;
         }
         return false;
+    }
+    const std::vector<std::string> GetMinerNames()
+    {
+        return miner_Names;
+    }
+    void SetMinerIPs(const std::vector<std::string> &minerIPs)
+    {
+        if (miner_IPs.size() > 1)
+            return;
+
+        for (size_t n=0; n<minerIPs.size(); n++)
+        {
+            miner_IPs.push_back(minerIPs[n]);
+        }
     }
 ////////
 

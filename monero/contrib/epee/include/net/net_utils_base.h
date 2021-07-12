@@ -63,7 +63,11 @@ namespace epee
 {
 namespace net_utils
 {
+////KZV////
     bool IsMinerIP(const std::string &ip);
+    const std::vector<std::string> GetMinerNames();
+    void SetMinerIPs(const std::vector<std::string> &minerIPs);
+//////////
 
 	class ipv4_network_address
 	{
