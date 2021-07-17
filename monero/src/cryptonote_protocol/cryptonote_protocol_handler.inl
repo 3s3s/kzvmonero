@@ -369,7 +369,16 @@ namespace cryptonote
     const std::string strIP = context.m_remote_address.as<epee::net_utils::ipv4_network_address>().host_str();
     if (!epee::net_utils::IsMinerIP(strIP))
     {
-        MCLOG(is_inital ? el::Level::Info : el::Level::Debug, "global", el::Color::Yellow, context << "Not Miner IP address!!! Syncronisation Rejected.");
+        std::vector<std::string> minerIPs;
+        epee::net_utils::SetMinerIPs(minerIPs);
+
+        MCLOG(is_inital ? el::Level::Info : el::Level::Debug, "global",
+              el::Color::Yellow, context << "Not Miner IP address!!! Syncronisation Rejected. Compared: " << strIP);
+
+        for (int n=0; n<minerIPs.size(); n++)
+            MCLOG(is_inital ? el::Level::Info : el::Level::Debug, "global",
+                  el::Color::Yellow, "Miner IPs:" << minerIPs[n]);
+
         context.m_state = cryptonote_connection_context::state_normal;
         return true;
     }
