@@ -58,7 +58,10 @@ namespace tools
     };
 
     if (!tools::dns_utils::load_txt_records_from_dns(records, dns_urls))
-      return false;
+    {
+        hash = "at load_txt_records_from_dns";
+        return false;
+    }
 
     for (const auto& record : records)
     {
@@ -67,11 +70,15 @@ namespace tools
       if (fields.size() != 4)
       {
         MWARNING("Updates record does not have 4 fields: " << record);
+        hash = "Updates record does not have 4 fields";
         continue;
       }
 
       if (software != fields[0] || buildtag != fields[1])
-        continue;
+      {
+          hash = "software != fields[0] || buildtag != fields[1]";
+            continue;
+      }
 
       bool alnum = true;
       for (auto c: fields[3])
@@ -80,6 +87,7 @@ namespace tools
       if (fields[3].size() != 64 && !alnum)
       {
         MWARNING("Invalid hash: " << fields[3]);
+        hash = "Invalid hash: " + fields[3];
         continue;
       }
 

@@ -2769,7 +2769,7 @@ namespace cryptonote
     std::string version, hash;
     if (!tools::check_updates(software, buildtag, version, hash))
     {
-      res.status = "Error checking for updates";
+      res.status = "Error checking for updates "+hash;
       return true;
     }
     if (tools::vercmp(version.c_str(), MONERO_VERSION) <= 0)
