@@ -37,9 +37,13 @@
 
 Updater::Updater()
 {
-    m_maintainers.emplace_back(fileGetContents(":/monero/utils/gpg_keys/binaryfate.asc").toStdString());
+    /////KZV (maintainers))////
+    /*m_maintainers.emplace_back(fileGetContents(":/monero/utils/gpg_keys/binaryfate.asc").toStdString());
     m_maintainers.emplace_back(fileGetContents(":/monero/utils/gpg_keys/fluffypony.asc").toStdString());
-    m_maintainers.emplace_back(fileGetContents(":/monero/utils/gpg_keys/luigi1111.asc").toStdString());
+    m_maintainers.emplace_back(fileGetContents(":/monero/utils/gpg_keys/luigi1111.asc").toStdString());*/
+    m_maintainers.emplace_back(fileGetContents(":/monero/utils/gpg_keys/usdx1.asc").toStdString());
+    m_maintainers.emplace_back(fileGetContents(":/monero/utils/gpg_keys/usdx2.asc").toStdString());
+    //////////////////
 }
 
 QByteArray Updater::fetchSignedHash(
@@ -47,8 +51,12 @@ QByteArray Updater::fetchSignedHash(
     const QByteArray &hashFromDns,
     QPair<QString, QString> &signers) const
 {
-    static constexpr const char hashesTxtUrl[] = "https://web.getmonero.org/downloads/hashes.txt";
-    static constexpr const char hashesTxtSigUrl[] = "https://web.getmonero.org/downloads/hashes.txt.sig";
+    ////KZV (hashes)////
+    //static constexpr const char hashesTxtUrl[] = "https://web.getmonero.org/downloads/hashes.txt";
+    //static constexpr const char hashesTxtSigUrl[] = "https://web.getmonero.org/downloads/hashes.txt.sig";
+    static constexpr const char hashesTxtUrl[] = "https://trade.multicoins.org/usdx/hashes.txt";
+    static constexpr const char hashesTxtSigUrl[] = "https://trade.multicoins.org/usdxv/hashes.txt.sig";
+    //////////////////////////////
 
     const Network network;
     std::string hashesTxt = network.get(hashesTxtUrl);
