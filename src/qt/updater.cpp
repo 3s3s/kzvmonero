@@ -55,7 +55,7 @@ QByteArray Updater::fetchSignedHash(
     //static constexpr const char hashesTxtUrl[] = "https://web.getmonero.org/downloads/hashes.txt";
     //static constexpr const char hashesTxtSigUrl[] = "https://web.getmonero.org/downloads/hashes.txt.sig";
     static constexpr const char hashesTxtUrl[] = "https://trade.multicoins.org/usdx/hashes.txt";
-    static constexpr const char hashesTxtSigUrl[] = "https://trade.multicoins.org/usdxv/hashes.txt.sig";
+    static constexpr const char hashesTxtSigUrl[] = "https://trade.multicoins.org/usdx/hashes.txt.sig";
     //////////////////////////////
 
     const Network network;
