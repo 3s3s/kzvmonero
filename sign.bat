@@ -17,7 +17,9 @@ rm -f hashes.txt
 rm -f hashes.txt.sig
 
 echo "##GUI" >> hashes_unsigned.txt
-sha256sum monero-gui-$DISTR_NAME-v$DISTR_VERSION.tar.bz2 >> hashes_unsigned.txt
+SHA256_LINUX64=$(sha256sum -b monero-gui-$DISTR_NAME-v$DISTR_VERSION.tar.bz2)
+echo $SHA256_LINUX64 >> hashes_unsigned.txt
+echo "# DNS TXT record should by: monero-gui:$DISTR_NAME:$DISTR_VERSION:$SHA256_LINUX64" >> hashes_unsigned.txt
 echo "# signed by $SIGNER1" >> hashes_unsigned.txt
 
 #sign hashes to text file (first signer)

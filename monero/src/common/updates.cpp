@@ -51,9 +51,9 @@ namespace tools
         //"updates.moneropulse.net",
         //"updates.moneropulse.co",
         //"updates.moneropulse.se"
-        "updates1.multicoins.org",
-        "updates2.multicoins.org",
-        "updates3.multicoins.org"
+        "sec1.usdx.fi",
+        "sec2.usdx.fi",
+        "sec3.usdx.fi"
         ////////
     };
 
@@ -114,7 +114,7 @@ namespace tools
   {
     ////KZV (download update path)////
     //const char *base = user ? "https://downloads.getmonero.org/" : "https://updates.getmonero.org/";
-    const char *base = user ? "https://trade.multicoins.org/usdx/" : "https://trade.multicoins.org/usdx/";
+    const char *base = user ? "https://github.com/3s3s/kzvmonero/raw/main/" : "https://github.com/3s3s/kzvmonero/raw/main/";
     ////////////
 
 #ifdef _WIN32
