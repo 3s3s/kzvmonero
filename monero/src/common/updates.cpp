@@ -76,8 +76,8 @@ namespace tools
 
       if (software != fields[0] || buildtag != fields[1])
       {
-          hash = "software != fields[0] || buildtag != fields[1]";
-            continue;
+          hash = "software != fields[0] || buildtag != fields[1]: " + software+":"+buildtag+" != "+fields[0]+":"+fields[1];
+          continue;
       }
 
       bool alnum = true;

@@ -510,9 +510,14 @@ namespace
 
 bool load_txt_records_from_dns(std::vector<std::string> &good_records, const std::vector<std::string> &dns_urls)
 {
-  // Prevent infinite recursion when distributing
-  if (dns_urls.empty()) return false;
+// Prevent infinite recursion when distributing
+  if (dns_urls.empty())
+  {
+      LOG_PRINT_L0("load_txt_records_from_dns: dns_urls.empty() => return false");
+      return false;
+  }
 
+  LOG_PRINT_L0("load_txt_records_from_dns: start");
   std::vector<std::vector<std::string> > records;
   records.resize(dns_urls.size());
 

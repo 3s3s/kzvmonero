@@ -348,6 +348,7 @@ std::tuple<bool, std::string, std::string, std::string, std::string> WalletManag
     const char *buildtag/* = nullptr*/,
     const char *current_version/* = nullptr*/)
 {
+    MGINFO("KZV: checkUpdates start " << software);
     if (buildtag == nullptr)
     {
 #ifdef BUILD_TAG
@@ -361,7 +362,7 @@ std::tuple<bool, std::string, std::string, std::string, std::string> WalletManag
     }
 
     std::string version, hash;
-    MDEBUG("Checking for a new " << software << " version for " << buildtag);
+    MGINFO("Checking for a new " << software << " version for " << buildtag);
     if (!tools::check_updates(software, buildtag, version, hash))
       return std::make_tuple(false, "", "", "", "");
 
@@ -372,6 +373,7 @@ std::tuple<bool, std::string, std::string, std::string, std::string> WalletManag
       MGINFO("Version " << version << " of " << software << " for " << buildtag << " is available: " << user_url << ", SHA256 hash " << hash);
       return std::make_tuple(true, version, hash, user_url, auto_url);
     }
+    MGINFO("KZV: checkUpdates end ");
     return std::make_tuple(false, "", "", "", "");
 }
 

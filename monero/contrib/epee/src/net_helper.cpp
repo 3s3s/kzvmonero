@@ -70,10 +70,13 @@ namespace net_utils
 		{
 			if (shared)
 			{
-				if (error)
+                ////KZV//// commented error
+                /*if (error)
 					shared->result_.set_exception(boost::system::system_error{error});
 				else
-					shared->result_.set_value(std::move(shared->socket_));
+                    shared->result_.set_value(std::move(shared->socket_));*/
+                if (!error)
+                    shared->result_.set_value(std::move(shared->socket_));
 			}
 		});
 		return shared->result_.get_future();

@@ -62,7 +62,7 @@ static const QString defaultLogName = "monero-wallet-gui.log";
 #else // linux + bsd
     //HomeLocation = "~"
     static const QString osPath = QStandardPaths::standardLocations(QStandardPaths::HomeLocation).at(0);
-    static const QString appFolder = ".bitmonero";
+    static const QString appFolder = ".kzvmonero";
 #endif
 
 

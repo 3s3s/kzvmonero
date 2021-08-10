@@ -7,7 +7,7 @@ SIGNER2=usdx2
 DISTR_NAME=linux-x64
 
 FOR_LINUX_RELEASE=$HOME/monero-gui/build/release/bin
-FOR_LINUX_OUTPUT=$HOME/monero-gui
+FOR_LINUX_OUTPUT=$HOME/monero-gui/gui
 
 cd $FOR_LINUX_RELEASE
 tar -cvjSf $FOR_LINUX_OUTPUT/monero-gui-$DISTR_NAME-v$DISTR_VERSION.tar.bz2 *

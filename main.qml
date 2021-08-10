@@ -2173,7 +2173,7 @@ ApplicationWindow {
         if (version) {
             walletManager.checkUpdatesAsync("monero-gui", "gui", getBuildTag(), version[0]);
         } else {
-            console.error("failed to parse version number", Version.GUI_VERSION);
+            console.error("checkUpdates failed to parse version number = ", Version.GUI_VERSION);
         }
     }
 

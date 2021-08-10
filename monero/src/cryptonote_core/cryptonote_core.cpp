@@ -1784,7 +1784,7 @@ namespace cryptonote
       return true;
 
     std::string version, hash;
-    MCDEBUG("updates", "Checking for a new " << software << " version for " << buildtag);
+    MGINFO("Checking for a new " << software << " version for " << buildtag);
     if (!tools::check_updates(software, buildtag, version, hash))
       return false;
 
