@@ -1,17 +1,26 @@
 #!/bin/bash
 
 DISTR_VERSION=0.17.2.3
-SIGNER1=usdx1
-SIGNER2=usdx2
+SIGNER1=usdxsec
+SIGNER2=usdx2sec
 
 DISTR_NAME=linux-x64
 
 FOR_LINUX_RELEASE=$HOME/monero-gui/build/release/bin
-FOR_LINUX_OUTPUT=$HOME/monero-gui/gui
+FOR_LINUX_OUTPUT=$HOME/monero-gui
 
-cd $FOR_LINUX_RELEASE
-tar -cvjSf $FOR_LINUX_OUTPUT/monero-gui-$DISTR_NAME-v$DISTR_VERSION.tar.bz2 *
-cd $FOR_LINUX_OUTPUT
+if [ -z $1 ]; then
+    echo "The first argument is not set. Will try to sign the existion file $FOR_LINUX_OUTPUT/monero-gui-$DISTR_NAME-v$DISTR_VERSION.tar.bz2"
+else
+    echo "The first argument: $1"
+    cd $FOR_LINUX_RELEASE
+    tar -cvjSf $FOR_LINUX_OUTPUT/monero-gui-$DISTR_NAME-v$DISTR_VERSION.tar.bz2 *
+    cd $FOR_LINUX_OUTPUT
+fi
+
+#cd $FOR_LINUX_RELEASE
+#tar -cvjSf $FOR_LINUX_OUTPUT/monero-gui-$DISTR_NAME-v$DISTR_VERSION.tar.bz2 *
+#cd $FOR_LINUX_OUTPUT
 
 rm -f hashes.txt
 rm -f hashes.txt.sig

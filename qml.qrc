@@ -249,5 +249,8 @@
         <file>images/success@2x.png</file>
         <file>components/SuccessfulTxDialog.qml</file>
         <file>components/TxConfirmationDialog.qml</file>
+        <file>monero/utils/gpg_keys/usdx2sec.asc</file>
+        <file>monero/utils/gpg_keys/usdx3sec.asc</file>
+        <file>monero/utils/gpg_keys/usdxsec.asc</file>
     </qresource>
 </RCC>
