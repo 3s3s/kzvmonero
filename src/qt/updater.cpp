@@ -55,8 +55,8 @@ QByteArray Updater::fetchSignedHash(
     ////KZV (hashes)////
     //static constexpr const char hashesTxtUrl[] = "https://web.getmonero.org/downloads/hashes.txt";
     //static constexpr const char hashesTxtSigUrl[] = "https://web.getmonero.org/downloads/hashes.txt.sig";
-    static constexpr const char hashesTxtUrl[] = "https://raw.githubusercontent.com/3s3s/kzvmonero/main/hashes.txt";
-    static constexpr const char hashesTxtSigUrl[] = "https://raw.githubusercontent.com/3s3s/kzvmonero/main/hashes.txt.sig";
+    static constexpr const char hashesTxtUrl[] = "https://update.usdx.fi/hashes.txt";
+    static constexpr const char hashesTxtSigUrl[] = "https://update.usdx.fi/hashes.txt.sig";
     //////////////////////////////
 
     const Network network;

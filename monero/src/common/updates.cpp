@@ -114,7 +114,7 @@ namespace tools
   {
     ////KZV (download update path)////
     //const char *base = user ? "https://downloads.getmonero.org/" : "https://updates.getmonero.org/";
-    const char *base = user ? "https://github.com/3s3s/kzvmonero/raw/main/" : "https://github.com/3s3s/kzvmonero/raw/main/";
+    const char *base = user ? "https://downloads.usdx.fi/" : "https://downloads.usdx.fi/";
     ////////////
 
 #ifdef _WIN32
