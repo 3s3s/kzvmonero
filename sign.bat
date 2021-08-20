@@ -6,8 +6,8 @@ SIGNER2=usdx2sec
 
 DISTR_NAME=linux-x64
 
-FOR_LINUX_RELEASE=$HOME/monero-gui/build/release/bin
-FOR_LINUX_OUTPUT=$HOME/monero-gui
+FOR_LINUX_RELEASE=$HOME/kzvmonero/build/release/bin
+FOR_LINUX_OUTPUT=$HOME/kzvmonero
 
 if [ -z $1 ]; then
     echo "The first argument is not set. Will try to sign the existion file $FOR_LINUX_OUTPUT/monero-gui-$DISTR_NAME-v$DISTR_VERSION.tar.bz2"
