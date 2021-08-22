@@ -251,12 +251,12 @@ DNSResolver::DNSResolver() : m_data(new DNSResolverData())
     dns_public_addr = tools::dns_utils::parse_dns_public(DNS_PUBLIC);
     if (!dns_public_addr.empty())
     {
-      MGINFO("Using public DNS server(s): " << boost::join(dns_public_addr, ", ") << " (TCP)");
+      LOG_PRINT_L0("Using public DNS server(s): " << boost::join(dns_public_addr, ", ") << " (TCP)");
       use_dns_public = 1;
     }
     else
     {
-      MERROR("Failed to parse DNS_PUBLIC");
+      LOG_PRINT_L0("Failed to parse DNS_PUBLIC");
     }
   }
 
@@ -284,11 +284,12 @@ DNSResolver::DNSResolver() : m_data(new DNSResolverData())
     // should be a valid DNSSEC record, and switch to known good
     // DNSSEC resolvers if verification fails
     bool available, valid;
-    static const char *probe_hostname = "updates.moneropulse.org";
+//    static const char *probe_hostname = "updates.moneropulse.org"; ////KZV
+    static const char *probe_hostname = "sec1.usdx.fi";
     auto records = get_txt_record(probe_hostname, available, valid);
     if (!valid)
     {
-      MINFO("Failed to verify DNSSEC record from " << probe_hostname << ", falling back to TCP with well known DNSSEC resolvers");
+      LOG_PRINT_L0("Failed to verify DNSSEC record from " << probe_hostname << ", falling back to TCP with well known DNSSEC resolvers");
       ub_ctx_delete(m_data->m_ub_context);
       m_data->m_ub_context = ub_ctx_create();
       add_anchors(m_data->m_ub_context);
@@ -320,6 +321,7 @@ std::vector<std::string> DNSResolver::get_record(const std::string& url, int rec
 
   if (!check_address_syntax(url.c_str()))
   {
+      LOG_PRINT_L0("DNSResolver::get_record failed code 1 with address " << url.c_str());
     return addresses;
   }
 
@@ -327,22 +329,29 @@ std::vector<std::string> DNSResolver::get_record(const std::string& url, int rec
   ub_result_ptr result;
 
   // call DNS resolver, blocking.  if return value not zero, something went wrong
-  if (!ub_resolve(m_data->m_ub_context, string_copy(url.c_str()), record_type, DNS_CLASS_IN, &result))
+  const int nError = ub_resolve(m_data->m_ub_context, string_copy(url.c_str()), record_type, DNS_CLASS_IN, &result);
+  if (!nError)
   {
+      LOG_PRINT_L0("DNSResolver::get_record step 1");
     dnssec_available = (result->secure || result->bogus);
     dnssec_valid = result->secure && !result->bogus;
     if (result->havedata)
     {
+        LOG_PRINT_L0("DNSResolver::get_record step 2");
       for (size_t i=0; result->data[i] != NULL; i++)
       {
         boost::optional<std::string> res = (*reader)(result->data[i], result->len[i]);
         if (res)
         {
-          MINFO("Found \"" << *res << "\" in " << get_record_name(record_type) << " record for " << url);
+          LOG_PRINT_L0("Found \"" << *res << "\" in " << get_record_name(record_type) << " record for " << url);
           addresses.push_back(*res);
         }
       }
     }
+  }
+  else
+  {
+      LOG_PRINT_L0("DNSResolver::get_record ub_resolve failed with code " << nError);
   }
 
   return addresses;
@@ -542,12 +551,12 @@ bool load_txt_records_from_dns(std::vector<std::string> &good_records, const std
     if (!avail[cur_index])
     {
       records[cur_index].clear();
-      LOG_PRINT_L2("DNSSEC not available for hostname: " << url << ", skipping.");
+      LOG_PRINT_L0("DNSSEC not available for hostname: " << url << ", skipping.");
     }
     if (!valid[cur_index])
     {
       records[cur_index].clear();
-      LOG_PRINT_L2("DNSSEC validation failed for hostname: " << url << ", skipping.");
+      LOG_PRINT_L0("DNSSEC validation failed for hostname: " << url << ", skipping.");
     }
 
     cur_index++;
@@ -569,7 +578,7 @@ bool load_txt_records_from_dns(std::vector<std::string> &good_records, const std
 
   if (num_valid_records < 2)
   {
-    LOG_PRINT_L0("WARNING: no two valid DNS TXT records were received");
+    LOG_PRINT_L0("WARNING: no two (" << num_valid_records <<") valid DNS TXT records were received");
     return false;
   }
 
