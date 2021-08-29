@@ -31,7 +31,7 @@ function (write_static_version_header VERSION_TAG_GUI)
 endfunction ()
 
 ####KZV####
-write_static_version_header("0.17.2.2")
+write_static_version_header("0.17.2.4")
 ###########
 
 #find_package(Git QUIET)

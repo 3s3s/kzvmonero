@@ -236,7 +236,7 @@ static void add_anchors(ub_ctx *ctx)
   const char * const *ds = ::get_builtin_ds();
   while (*ds)
   {
-    MINFO("adding trust anchor: " << *ds);
+    LOG_PRINT_L0("adding trust anchor: " << *ds);
     ub_ctx_add_ta(ctx, string_copy(*ds++));
   }
 }
@@ -265,6 +265,7 @@ DNSResolver::DNSResolver() : m_data(new DNSResolverData())
 
   if (use_dns_public)
   {
+      LOG_PRINT_L0("---Use DNS_PUBLIC---");
     for (const auto &ip: dns_public_addr)
       ub_ctx_set_fwd(m_data->m_ub_context, string_copy(ip.c_str()));
     ub_ctx_set_option(m_data->m_ub_context, string_copy("do-udp:"), string_copy("no"));
@@ -297,6 +298,12 @@ DNSResolver::DNSResolver() : m_data(new DNSResolverData())
         ub_ctx_set_fwd(m_data->m_ub_context, string_copy(ip));
       ub_ctx_set_option(m_data->m_ub_context, string_copy("do-udp:"), string_copy("no"));
       ub_ctx_set_option(m_data->m_ub_context, string_copy("do-tcp:"), string_copy("yes"));
+
+      ////KZV last check///
+      auto records = get_txt_record(probe_hostname, available, valid);
+      if (!valid)
+        LOG_PRINT_L0("DNSSEC last check failed for" << probe_hostname << ". May be something wrong with system settings");
+      /////////////////////
     }
   }
 }
@@ -335,6 +342,12 @@ std::vector<std::string> DNSResolver::get_record(const std::string& url, int rec
       LOG_PRINT_L0("DNSResolver::get_record step 1");
     dnssec_available = (result->secure || result->bogus);
     dnssec_valid = result->secure && !result->bogus;
+
+    ////KZV
+    if (result->bogus)
+        LOG_PRINT_L0("DNSSEC result is bogus: " << result->why_bogus);
+    ///
+
     if (result->havedata)
     {
         LOG_PRINT_L0("DNSResolver::get_record step 2");
