@@ -32,8 +32,8 @@ SHA256_LINUX64=$(sha256sum -b monero-gui-$DISTR_NAME_LINUX-v$DISTR_VERSION.tar.b
 SHA256_WINDOWS64=$(sha256sum -b monero-gui-$DISTR_NAME_WINDOWS-v$DISTR_VERSION.tar.bz2)
 echo $SHA256_LINUX64 >> hashes_unsigned.txt
 echo $SHA256_WINDOWS64 >> hashes_unsigned.txt
-echo "# DNS TXT record should by: monero-gui:$DISTR_NAME:$DISTR_VERSION:$SHA256_LINUX64" >> hashes_unsigned.txt
-echo "# DNS TXT record should by: monero-gui:$DISTR_NAME:$DISTR_VERSION:$SHA256_WINDOWS64" >> hashes_unsigned.txt
+echo "# DNS TXT record should by: monero-gui:$DISTR_NAME_LINUX:$DISTR_VERSION:$SHA256_LINUX64" >> hashes_unsigned.txt
+echo "# DNS TXT record should by: monero-gui:$DISTR_NAME_WINDOWS:$DISTR_VERSION:$SHA256_WINDOWS64" >> hashes_unsigned.txt
 echo "# signed by $SIGNER1" >> hashes_unsigned.txt
 
 #sign hashes to text file (first signer)
