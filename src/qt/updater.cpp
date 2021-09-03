@@ -83,10 +83,10 @@ QByteArray Updater::verifyParseSignedHahes(
     const QString &binaryFilename,
     QPair<QString, QString> &signers) const
 {
-    std::cout << "Updater::Updater::verifyParseSignedHahes step 1\r\n";
+    //std::cout << "Updater::Updater::verifyParseSignedHahes step 1\r\n";
     const QString signedMessage = verifySignature(armoredSignedHashes, signers.first);
 
-    std::wcout << "Updater::verifyParseSignedHahes step 2 \r\n";
+    //std::wcout << "Updater::verifyParseSignedHahes step 2 \r\n";
     signers.second = verifySignature(
         epee::span<const uint8_t>(
             reinterpret_cast<const uint8_t *>(armoredSignedHashes.data()),

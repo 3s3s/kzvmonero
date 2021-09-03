@@ -116,7 +116,7 @@ void Downloader::cancel()
 
 bool Downloader::get(const QString &url, const QString &hash, const QJSValue &callback)
 {
-    std::cout << "Downloader started";
+    std::cout << "Downloader started\r\n";
 
     auto future = m_scheduler.run(
         [this, url, hash]() {
