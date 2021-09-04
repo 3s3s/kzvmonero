@@ -20,7 +20,7 @@ else
     cd $FOR_LINUX_RELEASE
     tar -cvjSf $FOR_LINUX_OUTPUT/monero-gui-$DISTR_NAME_LINUX-v$DISTR_VERSION.tar.bz2 *
     cd $FOR_WINDOWS_RELEASE
-    tar -cvjSf $FOR_LINUX_OUTPUT/monero-gui-$DISTR_NAME_WINDOWS-v$DISTR_VERSION.tar.bz2 *
+    zip -r $FOR_LINUX_OUTPUT/monero-gui-$DISTR_NAME_WINDOWS-v$DISTR_VERSION.zip *
     cd $FOR_LINUX_OUTPUT
 fi
 

@@ -153,7 +153,14 @@ QByteArray Updater::parseShasumOutput(const QString &message, const QString &fil
         }
     }
 
-    throw std::runtime_error("hash not found");
+    ////KZV////
+    QByteArray ba1 = message.toLocal8Bit();
+    QByteArray ba2 = filename.toLocal8Bit();
+
+    const std::string errorMessage = "hash not found for messsage: " + ba1.toStdString()+"; filename: " + ba2.toStdString();
+    ////////////
+
+    throw std::runtime_error(errorMessage);
 }
 
 QString Updater::verifySignature(const QByteArray &armoredSignedMessage, QString &signer) const
