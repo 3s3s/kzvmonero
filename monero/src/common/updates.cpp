@@ -70,13 +70,13 @@ namespace tools
       if (fields.size() != 4)
       {
         MWARNING("Updates record does not have 4 fields: " << record);
-        hash = "Updates record does not have 4 fields";
+        //hash = "Updates record does not have 4 fields";
         continue;
       }
 
       if (software != fields[0] || buildtag != fields[1])
       {
-          hash = "software != fields[0] || buildtag != fields[1]: " + software+":"+buildtag+" != "+fields[0]+":"+fields[1];
+          //hash = "KZV: software != fields[0] || buildtag != fields[1]: " + software+":"+buildtag+" != "+fields[0]+":"+fields[1];
           continue;
       }
 
@@ -87,7 +87,7 @@ namespace tools
       if (fields[3].size() != 64 && !alnum)
       {
         MWARNING("Invalid hash: " << fields[3]);
-        hash = "Invalid hash: " + fields[3];
+        //hash = "Invalid hash: " + fields[3];
         continue;
       }
 
