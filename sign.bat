@@ -6,6 +6,7 @@ SIGNER2=usdx2sec
 
 DISTR_NAME_LINUX=linux-x64
 DISTR_NAME_WINDOWS=win-x64
+DISTR_NAME_APPLE=mac-x64
 
 FOR_LINUX_RELEASE=$HOME/kzvmonero/build/release/bin
 FOR_LINUX_OUTPUT=$HOME/kzvmonero
@@ -19,6 +20,7 @@ else
     echo "The first argument: $1"
     cd $FOR_LINUX_RELEASE
     tar -cvjSf $FOR_LINUX_OUTPUT/monero-gui-$DISTR_NAME_LINUX-v$DISTR_VERSION.tar.bz2 *
+    hdiutil create $FOR_LINUX_OUTPUT/monero-gui-$DISTR_NAME_APPLE-v$DISTR_VERSION.dmg -fs HFS+ -srcfolder $FOR_LINUX_RELEASE
     cd $FOR_WINDOWS_RELEASE
     zip -r $FOR_LINUX_OUTPUT/monero-gui-$DISTR_NAME_WINDOWS-v$DISTR_VERSION.zip *
     cd $FOR_LINUX_OUTPUT
