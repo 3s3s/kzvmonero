@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(monero-gui)
+project(usdx-gui)
 
 message(STATUS "Initiating compile using CMake ${CMAKE_VERSION}")
 
@@ -153,10 +153,11 @@ if(NOT ANDROID)
   message(STATUS "libhidapi: libraries at ${HIDAPI_LIBRARIES}")
 endif()
 
+#set(Boost_USE_STATIC_RUNTIME OFF)
 # Boost
-if(DEBUG)
+#if(DEBUG)
     set(Boost_DEBUG ON)
-endif()
+#endif()
 if(APPLE AND NOT BOOST_ROOT)
   execute_process(COMMAND brew --prefix boost OUTPUT_VARIABLE BOOST_ROOT OUTPUT_STRIP_TRAILING_WHITESPACE)
 endif()

@@ -365,7 +365,7 @@ Rectangle {
                                 wrapMode: Text.WrapAnywhere
                                 placeholderText: {
                                     if(persistentSettings.nettype == NetworkType.MAINNET){
-                                        return "4.. / 8.. / OpenAlias";
+                                        return "X.. / H.. / OpenAlias";
                                     } else if (persistentSettings.nettype == NetworkType.STAGENET){
                                         return "5.. / 7..";
                                     } else if(persistentSettings.nettype == NetworkType.TESTNET){
@@ -1005,7 +1005,7 @@ Rectangle {
                 informationPopup.open();
             } else {
                 informationPopup.title = qsTr("Information") + translationManager.emptyString
-                informationPopup.text  = qsTr("Monero sent successfully") + translationManager.emptyString
+                informationPopup.text  = qsTr("USDX sent successfully") + translationManager.emptyString
                 informationPopup.icon  = StandardIcon.Information
                 informationPopup.onCloseCallback = null
                 informationPopup.open();

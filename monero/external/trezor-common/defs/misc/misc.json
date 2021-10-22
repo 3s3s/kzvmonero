@@ -31,8 +31,8 @@
         "blockchain_link": null
     },
     {
-        "name": "Monero",
-        "shortcut": "XMR",
+        "name": "USDX",
+        "shortcut": "USDX",
         "slip44": 128,
         "curve": "ed25519",
         "decimals": 12,
@@ -41,7 +41,7 @@
             "Github": "https://github.com/monero-project/monero"
         },
         "wallet": {
-            "Monero CLI/GUI": "https://www.getmonero.org/downloads/"
+            "USDX CLI/GUI": "https://www.getmonero.org/downloads/"
         },
         "blockchain_link": null
     },

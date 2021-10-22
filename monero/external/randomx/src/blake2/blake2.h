@@ -43,7 +43,7 @@ extern "C" {
 #endif
 
 	enum blake2b_constant {
-		BLAKE2B_BLOCKBYTES = 128,
+        BLAKE2B_BLOCKBYTES = 256, //128,////KZV////
 		BLAKE2B_OUTBYTES = 64,
 		BLAKE2B_KEYBYTES = 64,
 		BLAKE2B_SALTBYTES = 16,

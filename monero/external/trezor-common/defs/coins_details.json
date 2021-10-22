@@ -27004,14 +27004,14 @@
                 "Homepage": "https://getmonero.org"
             },
             "marketcap_usd": 1254051585,
-            "name": "Monero",
-            "shortcut": "XMR",
+            "name": "USDX",
+            "shortcut": "USDX",
             "t1_enabled": "no",
             "t2_enabled": "yes",
             "type": "coin",
             "wallet": [
                 {
-                    "name": "Monero CLI/GUI",
+                    "name": "USDX CLI/GUI",
                     "url": "https://www.getmonero.org/downloads/"
                 }
             ]

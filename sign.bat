@@ -14,15 +14,15 @@ FOR_LINUX_OUTPUT=$HOME/kzvmonero
 FOR_WINDOWS_RELEASE=$HOME/kzvmonero/build/x86_64-w64-mingw32/release/bin
 
 if [ -z $1 ]; then
-    echo "The first argument is not set. Will try to sign the existion file $FOR_LINUX_OUTPUT/monero-gui-$DISTR_NAME_LINUX-v$DISTR_VERSION.tar.bz2"
-    echo "The first argument is not set. Will try to sign the existion file $FOR_LINUX_OUTPUT/monero-gui-$DISTR_NAME_WINDOWS-v$DISTR_VERSION.tar.bz2"
+    echo "The first argument is not set. Will try to sign the existion file $FOR_LINUX_OUTPUT/usdx-gui-$DISTR_NAME_LINUX-v$DISTR_VERSION.tar.bz2"
+    echo "The first argument is not set. Will try to sign the existion file $FOR_LINUX_OUTPUT/usdx-gui-$DISTR_NAME_WINDOWS-v$DISTR_VERSION.tar.bz2"
 else
     echo "The first argument: $1"
     cd $FOR_LINUX_RELEASE
-    tar -cvjSf $FOR_LINUX_OUTPUT/monero-gui-$DISTR_NAME_LINUX-v$DISTR_VERSION.tar.bz2 *
+    tar -cvjSf $FOR_LINUX_OUTPUT/usdx-gui-$DISTR_NAME_LINUX-v$DISTR_VERSION.tar.bz2 *
     hdiutil create $FOR_LINUX_OUTPUT/monero-gui-$DISTR_NAME_APPLE-v$DISTR_VERSION.dmg -fs HFS+ -srcfolder $FOR_LINUX_RELEASE
     cd $FOR_WINDOWS_RELEASE
-    zip -r $FOR_LINUX_OUTPUT/monero-gui-$DISTR_NAME_WINDOWS-v$DISTR_VERSION.zip *
+    zip -r $FOR_LINUX_OUTPUT/usdx-gui-$DISTR_NAME_WINDOWS-v$DISTR_VERSION.zip *
     cd $FOR_LINUX_OUTPUT
 fi
 
@@ -30,12 +30,12 @@ rm -f hashes.txt
 rm -f hashes.txt.sig
 
 echo "##GUI" >> hashes_unsigned.txt
-SHA256_LINUX64=$(sha256sum -b monero-gui-$DISTR_NAME_LINUX-v$DISTR_VERSION.tar.bz2)
-SHA256_WINDOWS64=$(sha256sum -b monero-gui-$DISTR_NAME_WINDOWS-v$DISTR_VERSION.tar.bz2)
+SHA256_LINUX64=$(sha256sum -b usdx-gui-$DISTR_NAME_LINUX-v$DISTR_VERSION.tar.bz2)
+SHA256_WINDOWS64=$(sha256sum -b usdx-gui-$DISTR_NAME_WINDOWS-v$DISTR_VERSION.zip)
 echo $SHA256_LINUX64 >> hashes_unsigned.txt
 echo $SHA256_WINDOWS64 >> hashes_unsigned.txt
-echo "# DNS TXT record should by: monero-gui:$DISTR_NAME_LINUX:$DISTR_VERSION:$SHA256_LINUX64" >> hashes_unsigned.txt
-echo "# DNS TXT record should by: monero-gui:$DISTR_NAME_WINDOWS:$DISTR_VERSION:$SHA256_WINDOWS64" >> hashes_unsigned.txt
+echo "# DNS TXT record should by: usdx-gui:$DISTR_NAME_LINUX:$DISTR_VERSION:$SHA256_LINUX64" >> hashes_unsigned.txt
+echo "# DNS TXT record should by: usdx-gui:$DISTR_NAME_WINDOWS:$DISTR_VERSION:$SHA256_WINDOWS64" >> hashes_unsigned.txt
 echo "# signed by $SIGNER1" >> hashes_unsigned.txt
 
 #sign hashes to text file (first signer)

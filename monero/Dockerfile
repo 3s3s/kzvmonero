@@ -189,13 +189,13 @@ RUN set -ex && \
 COPY --from=builder /src/build/release/bin /usr/local/bin/
 
 # Create monero user
-RUN adduser --system --group --disabled-password monero && \
-	mkdir -p /wallet /home/monero/.bitmonero && \
-	chown -R monero:monero /home/monero/.bitmonero && \
+RUN adduser --system --group --disabled-password usdx && \
+        mkdir -p /wallet /home/usdx/.usdx && \
+        chown -R monero:monero /home/usdx/.usdx && \
 	chown -R monero:monero /wallet
 
 # Contains the blockchain
-VOLUME /home/monero/.bitmonero
+VOLUME /home/usdx/.usdx
 
 # Generate your wallet via accessing the container and run:
 # cd /wallet
@@ -208,5 +208,5 @@ EXPOSE 18181
 # switch to user monero
 USER monero
 
-ENTRYPOINT ["monerod", "--p2p-bind-ip=0.0.0.0", "--p2p-bind-port=18180", "--rpc-bind-ip=0.0.0.0", "--rpc-bind-port=18181", "--non-interactive", "--confirm-external-bind"]
+ENTRYPOINT ["usdxd", "--p2p-bind-ip=0.0.0.0", "--p2p-bind-port=18180", "--rpc-bind-ip=0.0.0.0", "--rpc-bind-port=18181", "--non-interactive", "--confirm-external-bind"]
 

@@ -13,9 +13,9 @@ LogsDirectory=monero
 # Clearnet config
 #
 Type=forking
-PIDFile=/run/monero/monerod.pid
-ExecStart=/usr/bin/monerod --config-file /etc/monerod.conf \
-    --detach --pidfile /run/monero/monerod.pid
+PIDFile=/run/usdx/usdx.pid
+ExecStart=/usr/bin/usdxd --config-file /etc/usdxd.conf \
+    --detach --pidfile /run/usdx/usdxd.pid
 
 # Tor config
 #
