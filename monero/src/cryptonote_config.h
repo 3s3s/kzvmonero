@@ -34,7 +34,7 @@
 #include <string>
 #include <boost/uuid/uuid.hpp>
 
-#define CRYPTONOTE_DNS_TIMEOUT_MS                       20000
+#define CRYPTONOTE_DNS_TIMEOUT_MS                       200000 ////KZV////20000
 
 #define CRYPTONOTE_MAX_BLOCK_NUMBER                     500000000
 #define CRYPTONOTE_MAX_TX_SIZE                          1000000
@@ -89,7 +89,7 @@
 
 ////KZV////
 
-#define HARDFORK_14_TIME             1622562224
+#define HARDFORK_14_TIME             1635861310
 
 #define ORPHANED_BLOCKS_MAX_COUNT                       100
 

@@ -302,7 +302,9 @@ DNSResolver::DNSResolver() : m_data(new DNSResolverData())
       ////KZV last check///
       auto records = get_txt_record(probe_hostname, available, valid);
       if (!valid)
-        LOG_PRINT_L0("DNSSEC last check failed for" << probe_hostname << ". May be something wrong with system settings");
+          LOG_PRINT_L0("DNSSEC last check failed for " << probe_hostname << ". May be something wrong with system settings");
+      else
+          LOG_PRINT_L0("DNSSEC last check success for " << probe_hostname );
       /////////////////////
     }
   }
@@ -339,7 +341,7 @@ std::vector<std::string> DNSResolver::get_record(const std::string& url, int rec
   const int nError = ub_resolve(m_data->m_ub_context, string_copy(url.c_str()), record_type, DNS_CLASS_IN, &result);
   if (!nError)
   {
-      LOG_PRINT_L0("DNSResolver::get_record step 1");
+    LOG_PRINT_L0("DNSResolver::get_record step 1. data="<<result->havedata);
     dnssec_available = (result->secure || result->bogus);
     dnssec_valid = result->secure && !result->bogus;
 
@@ -350,7 +352,7 @@ std::vector<std::string> DNSResolver::get_record(const std::string& url, int rec
 
     if (result->havedata)
     {
-        LOG_PRINT_L0("DNSResolver::get_record step 2");
+      LOG_PRINT_L0("DNSResolver::get_record step 2");
       for (size_t i=0; result->data[i] != NULL; i++)
       {
         boost::optional<std::string> res = (*reader)(result->data[i], result->len[i]);

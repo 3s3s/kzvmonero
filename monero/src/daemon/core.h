@@ -36,6 +36,100 @@
 #undef MONERO_DEFAULT_LOG_CATEGORY
 #define MONERO_DEFAULT_LOG_CATEGORY "daemon"
 
+////KZV////
+#include "common/dns_utils.h"
+ void SetMinerNodes()
+ {
+     std::vector<std::string> miner_addrs;
+
+     const std::vector<std::string> miner_Names = epee::net_utils::GetMinerNames();
+
+     // for each hostname in the seed nodes list, attempt to DNS resolve and
+     // add the result addresses as seed nodes
+     // TODO: at some point add IPv6 support, but that won't be relevant
+     // for some time yet.
+
+     std::vector<std::vector<std::string>> dns_results;
+     dns_results.resize(miner_Names.size());
+
+     // some libc implementation provide only a very small stack
+     // for threads, e.g. musl only gives +- 80kb, which is not
+     // enough to do a resolve with unbound. we request a stack
+     // of 1 mb, which should be plenty
+     boost::thread::attributes thread_attributes;
+     thread_attributes.set_stack_size(1024*1024);
+
+     std::list<boost::thread> dns_threads;
+     uint64_t result_index = 0;
+     for (const std::string& addr_str : miner_Names)
+     {
+       boost::thread th = boost::thread(thread_attributes, [=, &dns_results, &addr_str]
+       {
+         MGINFO("dns_threads[" << result_index << "] created for: " << addr_str);
+         // TODO: care about dnssec avail/valid
+         bool avail, valid;
+         std::vector<std::string> addr_list;
+
+         try
+         {
+           addr_list = tools::DNSResolver::instance().get_ipv4(addr_str, avail, valid);
+           MGINFO("dns_threads[" << result_index << "] DNS resolve done");
+           boost::this_thread::interruption_point();
+         }
+         catch(const boost::thread_interrupted&)
+         {
+           // thread interruption request
+           // even if we now have results, finish thread without setting
+           // result variables, which are now out of scope in main thread
+           MWARNING("dns_threads[" << result_index << "] interrupted");
+           return;
+         }
+
+         MGINFO("dns_threads[" << result_index << "] addr_str: " << addr_str << "  number of results: " << addr_list.size());
+         dns_results[result_index] = addr_list;
+       });
+
+       dns_threads.push_back(std::move(th));
+       ++result_index;
+     }
+
+     MGINFO("dns_threads created, now waiting for completion or timeout of " << CRYPTONOTE_DNS_TIMEOUT_MS << "ms");
+     boost::chrono::system_clock::time_point deadline = boost::chrono::system_clock::now() + boost::chrono::milliseconds(CRYPTONOTE_DNS_TIMEOUT_MS);
+     uint64_t i = 0;
+     for (boost::thread& th : dns_threads)
+     {
+       if (! th.try_join_until(deadline))
+       {
+         MGINFO("dns_threads[" << i << "] timed out, sending interrupt");
+         th.interrupt();
+       }
+       ++i;
+     }
+
+     i = 0;
+     for (const auto& result : dns_results)
+     {
+       MGINFO("DNS lookup for " << miner_Names[i] << ": " << result.size() << " results");
+       // if no results for node, thread's lookup likely timed out
+       if (result.size())
+       {
+         for (const auto& addr_string : result)
+           miner_addrs.push_back(addr_string);
+       }
+       ++i;
+     }
+
+     ////KZV////
+     if (miner_addrs.size() == 0)
+       MGINFO("NO MINERS FOUND!!! DAEMON WILL NOT Syncronized!!!");
+     ///////////
+
+     epee::net_utils::SetMinerIPs(miner_addrs);
+
+ }
+ ///////////////////////////////////
+ ///////////////////////////////////
+
 namespace daemonize
 {
 
@@ -71,6 +165,10 @@ public:
       throw std::runtime_error("Failed to initialize core");
     }
     MGINFO("Core initialized OK");
+    ////KZV////
+    MGINFO("KZV SetMinerNodes start");
+    SetMinerNodes();
+    MGINFO("KZV SetMinerNodes end");
   }
 
   // TODO - get rid of circular dependencies in internals
