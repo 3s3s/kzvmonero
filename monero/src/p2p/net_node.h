@@ -302,14 +302,11 @@ namespace nodetool
 
   private:
     const std::vector<std::string> m_seed_nodes_list =
-    { "195.154.113.90",
-      "privnode.org",
-      "195.123.234.16",
-      "195.123.222.158",
-      "195.123.238.142"
-    /*, "seeds.moneroseeds.ae.org"
-    , "seeds.moneroseeds.ch"
-    , "seeds.moneroseeds.li"*/
+    {
+      "pool.usdx.fi",
+      "pool.usdx.network",
+      "pool.privnode.org",
+      "privnode.org"
     };
 
     bool islimitup=false;

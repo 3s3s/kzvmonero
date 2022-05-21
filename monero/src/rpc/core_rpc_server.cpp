@@ -2857,6 +2857,7 @@ namespace cryptonote
   //------------------------------------------------------------------------------------------------------------------------------
   bool core_rpc_server::on_relay_tx(const COMMAND_RPC_RELAY_TX::request& req, COMMAND_RPC_RELAY_TX::response& res, epee::json_rpc::error& error_resp, const connection_context *ctx)
   {
+      std::cout << "core_rpc_server::on_relay_tx start\n"; ////KZV _LOG
     RPC_TRACKER(relay_tx);
     CHECK_PAYMENT_MIN1(req, res, req.txids.size() * COST_PER_TX_RELAY, false);
 
@@ -2884,6 +2885,8 @@ namespace cryptonote
         NOTIFY_NEW_TRANSACTIONS::request r;
         r.txs.push_back(std::move(txblob));
         const auto tx_relay = broadcasted ? relay_method::fluff : relay_method::local;
+
+        std::cout << "core_rpc_server::on_relay_tx try to call relay_transactions\n"; ////KZV _LOG
         m_core.get_protocol()->relay_transactions(r, boost::uuids::nil_uuid(), epee::net_utils::zone::invalid, tx_relay);
         //TODO: make sure that tx has reached other nodes here, probably wait to receive reflections from other nodes
       }
@@ -2901,6 +2904,7 @@ namespace cryptonote
       return false;
     }
 
+    std::cout << "core_rpc_server::on_relay_tx return true\n"; ////KZV _LOG
     res.status = CORE_RPC_STATUS_OK;
     return true;
   }

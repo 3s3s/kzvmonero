@@ -979,6 +979,7 @@ namespace cryptonote
   int t_cryptonote_protocol_handler<t_core>::handle_notify_get_txpool_complement(int command, NOTIFY_GET_TXPOOL_COMPLEMENT::request& arg, cryptonote_connection_context& context)
   {
     MLOG_P2P_MESSAGE("Received NOTIFY_GET_TXPOOL_COMPLEMENT (" << arg.hashes.size() << " txes)");
+    LOG_PRINT_L0("Received NOTIFY_GET_TXPOOL_COMPLEMENT (" << arg.hashes.size() << " txes)"); ////KZV _LOG
     if(context.m_state != cryptonote_connection_context::state_normal)
       return 1;
 
@@ -989,6 +990,7 @@ namespace cryptonote
     if (!m_core.get_txpool_complement(arg.hashes, txes))
     {
       LOG_ERROR_CCONTEXT("failed to get txpool complement");
+      LOG_PRINT_L0("failed to get txpool complement"); ////KZV _LOG
       return 1;
     }
 
@@ -1008,6 +1010,8 @@ namespace cryptonote
   template<class t_core>
   int t_cryptonote_protocol_handler<t_core>::handle_notify_new_transactions(int command, NOTIFY_NEW_TRANSACTIONS::request& arg, cryptonote_connection_context& context)
   {
+      MCLOG(el::Level::Info, "global", el::Color::Yellow, context << "Received NOTIFY_NEW_TRANSACTIONS (" << arg.txs.size() << " txes)"); ////KZV _LOG
+
     MLOG_P2P_MESSAGE("Received NOTIFY_NEW_TRANSACTIONS (" << arg.txs.size() << " txes)");
     for (const auto &blob: arg.txs)
       MLOGIF_P2P_MESSAGE(cryptonote::transaction tx; crypto::hash hash; bool ret = cryptonote::parse_and_validate_tx_from_blob(blob, tx, hash);, ret, "Including transaction " << hash);
@@ -1018,11 +1022,12 @@ namespace cryptonote
     // while syncing, core will lock for a long time, so we ignore
     // those txes as they aren't really needed anyway, and avoid a
     // long block before replying
-    if(!is_synchronized())
+    /*if(!is_synchronized())
     {
       LOG_DEBUG_CC(context, "Received new tx while syncing, ignored");
+      MCLOG(el::Level::Info, "global", el::Color::Yellow, context << "Received new tx while syncing, ignored"); ////KZV _LOG
       return 1;
-    }
+    }*/ ////KZV commented this because mining daemon are not knowns about syncronization progress
 
     /* If the txes were received over i2p/tor, the default is to "forward"
        with a randomized delay to further enhance the "white noise" behavior,
@@ -1053,6 +1058,7 @@ namespace cryptonote
       if (!m_core.handle_incoming_tx({tx, crypto::null_hash}, tvc, tx_relay, true))
       {
         LOG_PRINT_CCONTEXT_L1("Tx verification failed, dropping connection");
+        MCLOG(el::Level::Info, "global", el::Color::Yellow, context << "Tx verification failed, dropping connection"); ////KZV _LOG
         drop_connection(context, false, false);
         return 1;
       }
@@ -2780,6 +2786,7 @@ skip:
        local mempool before doing the relay. The code was already updating the
        DB twice on received transactions - it is difficult to workaround this
        due to the internal design. */
+      //MCLOG(el::Level::Info, "global", el::Color::Yellow, context << "relay_transactions STARTED"); ////KZV _LOG
     return m_p2p->send_txs(std::move(arg.txs), zone, source, tx_relay) != epee::net_utils::zone::invalid;
   }
   //------------------------------------------------------------------------------------------------------------------------

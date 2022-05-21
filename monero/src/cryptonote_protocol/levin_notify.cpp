@@ -209,6 +209,7 @@ namespace levin
 
     bool make_payload_send_txs(connections& p2p, std::vector<blobdata>&& txs, const boost::uuids::uuid& destination, const bool pad, const bool fluff)
     {
+        //LOG_PRINT_L0("make_payload_send_txs"); ////KZV _LOG
       const cryptonote::blobdata blob = make_tx_payload(std::move(txs), pad, fluff);
       p2p.for_connection(destination, [&blob](detail::p2p_context& context) {
         on_levin_traffic(context, true, true, false, blob.size(), get_command_from_message(blob));
@@ -565,6 +566,7 @@ namespace levin
               /* Source is intentionally omitted in debug log for privacy - a
                  nil uuid indicates source is that node. */
               MDEBUG("Sent " << txs_.size() << " transaction(s) to " << destination << " using Dandelion++ stem");
+              LOG_PRINT_L0("Sent " << txs_.size() << " transaction(s) to " << destination << " using Dandelion++ stem"); ////KZV _LOG
               return;
             }
 
@@ -795,6 +797,7 @@ namespace levin
     if (!zone_)
       return false;
 
+    LOG_PRINT_L0("notify::send_txs  start"); ////KZV _LOG
     /* If noise is enabled in a zone, it always takes precedence. The technique
        provides good protection against ISP adversaries, but not sybil
        adversaries. Noise is currently only enabled over I2P/Tor - those
@@ -816,6 +819,7 @@ namespace levin
       if (tx_relay == relay_method::stem)
       {
         MWARNING("Dandelion++ stem not supported over noise networks");
+        LOG_PRINT_L0("Warning: Dandelion++ stem not supported over noise networks"); ////KZV _LOG
         tx_relay = relay_method::local; // do not put into stempool embargo (hopefully not there already!).
       }
 
@@ -830,6 +834,7 @@ namespace levin
       if (CRYPTONOTE_MAX_FRAGMENTS * zone_->noise.size() < message.size())
       {
         MERROR("notify::send_txs provided message exceeding covert fragment size");
+        LOG_PRINT_L0("notify::send_txs provided message exceeding covert fragment size"); ////KZV _LOG
         return false;
       }
 

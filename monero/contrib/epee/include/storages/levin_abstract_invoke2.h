@@ -48,6 +48,10 @@ namespace
   {
     char buf[32];
     snprintf(buf, sizeof(buf),  "command-%u", command);
+    if (command == 2002)
+    {
+        LOG_PRINT_L0("on_levin_traffic: got transaction!"); ////KZV _LOG
+    }
     return on_levin_traffic(context, initiator, sent, error, bytes, buf);
   }
   static const constexpr epee::serialization::portable_storage::limits_t default_levin_limits = {

@@ -824,7 +824,10 @@ namespace rct {
             //DP(C);
             return MLSAG_Ver(message, M, mg, rows);
         }
-        catch (...) { return false; }
+        catch (...) {
+            std::cout << "verRctMGSimple catch error\n"; ////KZV _LOG
+            return false;
+        }
     }
 
     bool verRctCLSAGSimple(const key &message, const clsag &sig, const ctkeyV & pubs, const key & C_offset) {
@@ -938,7 +941,10 @@ namespace rct {
             sc_sub(c_new.bytes,c.bytes,sig.c1.bytes);
             return sc_isnonzero(c_new.bytes) == 0;
         }
-        catch (...) { return false; }
+        catch (...) {
+            std::cout << "verRctCLSAGSimple catch error\n"; ////KZV _LOG
+            return false;
+        }
     }
 
 
@@ -1483,7 +1489,7 @@ namespace rct {
 
         for (size_t i = 0; i < results.size(); ++i) {
           if (!results[i]) {
-            LOG_PRINT_L1("verRctMGSimple/verRctCLSAGSimple failed for input " << i);
+            LOG_PRINT_L1("verRctMGSimple/verRctCLSAGSimple (type=" << (rv.type == RCTTypeCLSAG ? "RCTTypeCLSAG":"RctMGSimple") << ") failed for input " << i);
             return false;
           }
         }

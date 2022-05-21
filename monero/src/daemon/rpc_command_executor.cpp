@@ -2227,6 +2227,7 @@ bool t_rpc_command_executor::relay_tx(const std::string &txid)
 
     if (m_is_rpc)
     {
+        LOG_PRINT_L0("t_rpc_command_executor::relay_tx -> RPC"); ////KZV _LOG
         if (!m_rpc_client->json_rpc_request(req, res, "relay_tx", fail_message.c_str()))
         {
             return true;
@@ -2234,11 +2235,13 @@ bool t_rpc_command_executor::relay_tx(const std::string &txid)
     }
     else
     {
+        LOG_PRINT_L0("t_rpc_command_executor::relay_tx -> on_relay_tx"); ////KZV _LOG
         if (!m_rpc_server->on_relay_tx(req, res, error_resp) || res.status != CORE_RPC_STATUS_OK)
         {
             tools::fail_msg_writer() << make_error(fail_message, res.status);
             return true;
         }
+        LOG_PRINT_L0(res.status); ////KZV _LOG
     }
 
     tools::success_msg_writer() << "Transaction successfully relayed";

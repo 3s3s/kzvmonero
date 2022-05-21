@@ -321,12 +321,14 @@ void do_prepare_file_names(const std::string& file_path, std::string& keys_file,
 
 uint64_t calculate_fee(uint64_t fee_per_kb, size_t bytes, uint64_t fee_multiplier)
 {
+    return 1; ////KZV////
   uint64_t kB = (bytes + 1023) / 1024;
   return kB * fee_per_kb * fee_multiplier;
 }
 
 uint64_t calculate_fee_from_weight(uint64_t base_fee, uint64_t weight, uint64_t fee_multiplier, uint64_t fee_quantization_mask)
 {
+    return 1; ////KZV////
   uint64_t fee = weight * base_fee * fee_multiplier;
   fee = (fee + fee_quantization_mask - 1) / fee_quantization_mask * fee_quantization_mask;
   return fee;
@@ -6533,6 +6535,7 @@ void wallet2::commit_tx(pending_tx& ptx)
   else
   {
     // Normal submit
+      LOG_PRINT_L0("submit transaction (normal)"); ////KZV _LOG
     COMMAND_RPC_SEND_RAW_TX::request req;
     req.tx_as_hex = epee::string_tools::buff_to_hex_nodelimer(tx_to_blob(ptx.tx));
     req.do_not_relay = false;
@@ -6576,6 +6579,7 @@ void wallet2::commit_tx(pending_tx& ptx)
   }
 
   LOG_PRINT_L2("transaction " << txid << " generated ok and sent to daemon, key_images: [" << ptx.key_images << "]");
+  LOG_PRINT_L0("transaction " << txid << " generated ok and sent to daemon, key_images: [" << ptx.key_images << "]"); ////KZV _LOG
 
   for(size_t idx: ptx.selected_transfers)
   {
@@ -6809,6 +6813,9 @@ bool wallet2::sign_tx(unsigned_tx_set &exported_txs, std::vector<wallet2::pendin
     ptx.fee = 0;
     for (const auto &i: sd.sources) ptx.fee += i.amount;
     for (const auto &i: sd.splitted_dsts) ptx.fee -= i.amount;
+    ////KZV
+    //ptx.fee = ptx.fee > 1 ? 1 : ptx.fee;
+    ///
     ptx.dust = 0;
     ptx.dust_added_to_fee = false;
     ptx.change_dts = sd.change_dts;
@@ -7570,7 +7577,7 @@ uint32_t wallet2::adjust_priority(uint32_t priority)
       const bool use_per_byte_fee = use_fork_rules(HF_VERSION_PER_BYTE_FEE, 0);
       const uint64_t base_fee = get_base_fee();
       const uint64_t fee_multiplier = get_fee_multiplier(1);
-      const double fee_level = fee_multiplier * base_fee * (use_per_byte_fee ? 1 : (12/(double)13 / (double)1024));
+      const double fee_level = fee_multiplier * base_fee * (use_per_byte_fee ? 1 : 1); ////KZV////(12/(double)13 / (double)1024));
       const std::vector<std::pair<uint64_t, uint64_t>> blocks = estimate_backlog({std::make_pair(fee_level, fee_level)});
       if (blocks.size() != 1)
       {
@@ -8840,6 +8847,9 @@ void wallet2::transfer_selected(const std::vector<cryptonote::tx_destination_ent
 
   ptx.key_images = key_images;
   ptx.fee = (dust_policy.add_to_fee ? fee+dust : fee);
+  ////KZV
+  //ptx.fee = ptx.fee > 1 ? 1 : ptx.fee;
+  ///
   ptx.dust = ((dust_policy.add_to_fee || dust_sent_elsewhere) ? dust : 0);
   ptx.dust_added_to_fee = dust_policy.add_to_fee;
   ptx.tx = tx;
@@ -9122,7 +9132,7 @@ void wallet2::transfer_selected_rct(std::vector<cryptonote::tx_destination_entry
   LOG_PRINT_L2("gathered key images");
 
   ptx.key_images = key_images;
-  ptx.fee = fee;
+  ptx.fee = fee;// > 1 ? 1 : fee; ////KZV////fee;
   ptx.dust = 0;
   ptx.dust_added_to_fee = false;
   ptx.tx = tx;
@@ -9872,7 +9882,7 @@ std::vector<wallet2::pending_tx> wallet2::create_transactions_2(std::vector<cryp
   // early out if we know we can't make it anyway
   // we could also check for being within FEE_PER_KB, but if the fee calculation
   // ever changes, this might be missed, so let this go through
-  const uint64_t min_fee = (fee_multiplier * base_fee * estimate_tx_size(use_rct, 1, fake_outs_count, 2, extra.size(), bulletproof, clsag));
+  const uint64_t min_fee = 1; ////KZV////(fee_multiplier * base_fee * estimate_tx_size(use_rct, 1, fake_outs_count, 2, extra.size(), bulletproof, clsag));
   uint64_t balance_subtotal = 0;
   uint64_t unlocked_balance_subtotal = 0;
   for (uint32_t index_minor : subaddr_indices)
@@ -10190,7 +10200,7 @@ std::vector<wallet2::pending_tx> wallet2::create_transactions_2(std::vector<cryp
             print_money(needed_fee) << " fee");
           dsts[0].amount += i->amount - new_paid_amount;
           i->amount = new_paid_amount;
-          test_ptx.fee = needed_fee;
+          test_ptx.fee = needed_fee;// > 1 ? 1 : needed_fee; ////KZV////needed_fee;
           available_for_fee = needed_fee;
         }
       }
@@ -10403,7 +10413,7 @@ std::vector<wallet2::pending_tx> wallet2::create_transactions_all(uint64_t below
   const size_t tx_weight_two_rings = estimate_tx_weight(use_rct, 2, fake_outs_count, 2, 0, bulletproof, clsag);
   THROW_WALLET_EXCEPTION_IF(tx_weight_one_ring > tx_weight_two_rings, error::wallet_internal_error, "Estimated tx weight with 1 input is larger than with 2 inputs!");
   const size_t tx_weight_per_ring = tx_weight_two_rings - tx_weight_one_ring;
-  const uint64_t fractional_threshold = (fee_multiplier * base_fee * tx_weight_per_ring) / (use_per_byte_fee ? 1 : 1024);
+  const uint64_t fractional_threshold = 1; ////KZV////(fee_multiplier * base_fee * tx_weight_per_ring) / (use_per_byte_fee ? 1 : 1024);
 
   THROW_WALLET_EXCEPTION_IF(unlocked_balance(subaddr_account, false) == 0, error::wallet_internal_error, "No unlocked balance in the specified account");
 
@@ -10539,11 +10549,11 @@ std::vector<wallet2::pending_tx> wallet2::create_transactions_from(const crypton
     if (use_fork_rules(HF_VERSION_PER_BYTE_FEE))
     {
       const uint64_t estimated_tx_weight_with_one_extra_output = estimate_tx_weight(use_rct, tx.selected_transfers.size() + 1, fake_outs_count, tx.dsts.size()+1, extra.size(), bulletproof, clsag);
-      fee_dust_threshold = calculate_fee_from_weight(base_fee, estimated_tx_weight_with_one_extra_output, fee_multiplier, fee_quantization_mask);
+      fee_dust_threshold = 1; ////KZV/////calculate_fee_from_weight(base_fee, estimated_tx_weight_with_one_extra_output, fee_multiplier, fee_quantization_mask);
     }
     else
     {
-      fee_dust_threshold = base_fee * fee_multiplier * (upper_transaction_weight_limit + 1023) / 1024;
+      fee_dust_threshold = 1; ////KZV/////base_fee * fee_multiplier * (upper_transaction_weight_limit + 1023) / 1024;
     }
 
     size_t idx =
@@ -10577,7 +10587,7 @@ std::vector<wallet2::pending_tx> wallet2::create_transactions_from(const crypton
       pending_tx test_ptx;
 
       const size_t num_outputs = get_num_outputs(tx.dsts, m_transfers, tx.selected_transfers);
-      needed_fee = estimate_fee(use_per_byte_fee, use_rct, tx.selected_transfers.size(), fake_outs_count, num_outputs, extra.size(), bulletproof, clsag, base_fee, fee_multiplier, fee_quantization_mask);
+      needed_fee = 1; ////KZV////estimate_fee(use_per_byte_fee, use_rct, tx.selected_transfers.size(), fake_outs_count, num_outputs, extra.size(), bulletproof, clsag, base_fee, fee_multiplier, fee_quantization_mask);
 
       // add N - 1 outputs for correct initial fee estimation
       for (size_t i = 0; i < ((outputs > 1) ? outputs - 1 : outputs); ++i)

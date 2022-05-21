@@ -135,7 +135,7 @@ int main(int argc, char* argv[])
   //lookup(LOOKUP_TXT, {"updates.moneropulse.org", "updates.moneropulse.net", "updates.moneropulse.co", "updates.moneropulse.se"});
   lookup(LOOKUP_TXT, {"sec1.usdx.fi", "sec2.usdx.fi", "sec3.usdx.fi"});
 
-  lookup(LOOKUP_TXT, {"checkpoints.moneropulse.org", "checkpoints.moneropulse.net", "checkpoints.moneropulse.co", "checkpoints.moneropulse.se"});
+  //lookup(LOOKUP_TXT, {"checkpoints.moneropulse.org", "checkpoints.moneropulse.net", "checkpoints.moneropulse.co", "checkpoints.moneropulse.se"});
 
   // those are in the code, but don't seem to actually exist
 #if 0

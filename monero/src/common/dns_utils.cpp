@@ -341,7 +341,7 @@ std::vector<std::string> DNSResolver::get_record(const std::string& url, int rec
   const int nError = ub_resolve(m_data->m_ub_context, string_copy(url.c_str()), record_type, DNS_CLASS_IN, &result);
   if (!nError)
   {
-    LOG_PRINT_L0("DNSResolver::get_record step 1. data="<<result->havedata);
+    //LOG_PRINT_L0("DNSResolver::get_record step 1. data="<<result->havedata);
     dnssec_available = (result->secure || result->bogus);
     dnssec_valid = result->secure && !result->bogus;
 
@@ -352,7 +352,7 @@ std::vector<std::string> DNSResolver::get_record(const std::string& url, int rec
 
     if (result->havedata)
     {
-      LOG_PRINT_L0("DNSResolver::get_record step 2");
+      //LOG_PRINT_L0("DNSResolver::get_record step 2");
       for (size_t i=0; result->data[i] != NULL; i++)
       {
         boost::optional<std::string> res = (*reader)(result->data[i], result->len[i]);

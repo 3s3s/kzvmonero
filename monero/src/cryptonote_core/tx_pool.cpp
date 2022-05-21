@@ -137,6 +137,7 @@ namespace cryptonote
   //---------------------------------------------------------------------------------
   bool tx_memory_pool::add_tx(transaction &tx, /*const crypto::hash& tx_prefix_hash,*/ const crypto::hash &id, const cryptonote::blobdata &blob, size_t tx_weight, tx_verification_context& tvc, relay_method tx_relay, bool relayed, uint8_t version)
   {
+      LOG_PRINT_L0("tx_memory_pool::add_tx"); ////KZV _LOG
     const bool kept_by_block = (tx_relay == relay_method::block);
 
     // this should already be called with that lock, but let's make it explicit for clarity
@@ -147,6 +148,8 @@ namespace cryptonote
     {
       // v0 never accepted
       LOG_PRINT_L1("transaction version 0 is invalid");
+      LOG_PRINT_L0("transaction version 0 is invalid"); ////KZV _LOG
+
       tvc.m_verifivation_failed = true;
       return false;
     }
@@ -158,6 +161,7 @@ namespace cryptonote
       // not clear if we should set that, since verifivation (sic) did not fail before, since
       // the tx was accepted before timing out.
       tvc.m_verifivation_failed = true;
+      LOG_PRINT_L0("tx verification failed (1)"); ////KZV _LOG
       return false;
     }
 
@@ -165,6 +169,7 @@ namespace cryptonote
     {
       tvc.m_verifivation_failed = true;
       tvc.m_invalid_input = true;
+      LOG_PRINT_L0("tx verification failed (2)"); ////KZV _LOG
       return false;
     }
 
@@ -177,13 +182,15 @@ namespace cryptonote
       if(!get_inputs_money_amount(tx, inputs_amount))
       {
         tvc.m_verifivation_failed = true;
+        LOG_PRINT_L0("tx verification failed (3)"); ////KZV _LOG
         return false;
       }
 
       uint64_t outputs_amount = get_outs_money_amount(tx);
       if(outputs_amount > inputs_amount)
       {
-        LOG_PRINT_L1("transaction use more money than it has: use " << print_money(outputs_amount) << ", have " << print_money(inputs_amount));
+          LOG_PRINT_L1("transaction use more money than it has: use " << print_money(outputs_amount) << ", have " << print_money(inputs_amount));
+          LOG_PRINT_L0("transaction use more money than it has: use " << print_money(outputs_amount) << ", have " << print_money(inputs_amount)); ////KZV _LOG
         tvc.m_verifivation_failed = true;
         tvc.m_overspend = true;
         return false;
@@ -191,6 +198,7 @@ namespace cryptonote
       else if(outputs_amount == inputs_amount)
       {
         LOG_PRINT_L1("transaction fee is zero: outputs_amount == inputs_amount, rejecting.");
+        LOG_PRINT_L0("transaction fee is zero: outputs_amount == inputs_amount, rejecting."); ////KZV _LOG
         tvc.m_verifivation_failed = true;
         tvc.m_fee_too_low = true;
         return false;
@@ -207,6 +215,8 @@ namespace cryptonote
     {
       tvc.m_verifivation_failed = true;
       tvc.m_fee_too_low = true;
+
+      LOG_PRINT_L0("tx verification failed (4)"); ////KZV _LOG
       return false;
     }
 
@@ -214,6 +224,7 @@ namespace cryptonote
     if ((!kept_by_block || version >= HF_VERSION_PER_BYTE_FEE) && tx_weight > tx_weight_limit)
     {
       LOG_PRINT_L1("transaction is too heavy: " << tx_weight << " bytes, maximum weight: " << tx_weight_limit);
+      LOG_PRINT_L0("transaction is too heavy: " << tx_weight << " bytes, maximum weight: " << tx_weight_limit); ////KZV _LOG
       tvc.m_verifivation_failed = true;
       tvc.m_too_big = true;
       return false;
@@ -228,6 +239,7 @@ namespace cryptonote
       {
         mark_double_spend(tx);
         LOG_PRINT_L1("Transaction with id= "<< id << " used already spent key images");
+        LOG_PRINT_L0("Transaction with id= "<< id << " used already spent key images"); ////KZV _LOG
         tvc.m_verifivation_failed = true;
         tvc.m_double_spend = true;
         return false;
@@ -237,6 +249,7 @@ namespace cryptonote
     if (!m_blockchain.check_tx_outputs(tx, tvc))
     {
       LOG_PRINT_L1("Transaction with id= "<< id << " has at least one invalid output");
+      LOG_PRINT_L0("Transaction with id= "<< id << " has at least one invalid output"); ////KZV _LOG
       tvc.m_verifivation_failed = true;
       tvc.m_invalid_output = true;
       return false;
@@ -278,7 +291,10 @@ namespace cryptonote
           CRITICAL_REGION_LOCAL1(m_blockchain);
           LockedTXN lock(m_blockchain.get_db());
           if (!insert_key_images(tx, id, tx_relay))
+          {
+              LOG_PRINT_L0("insert_key_images failed"); ////KZV _LOG
             return false;
+          }
 
           m_blockchain.add_txpool_tx(id, blob, meta);
           m_txs_by_fee_and_receive_time.emplace(std::pair<double, std::time_t>(fee / (double)(tx_weight ? tx_weight : 1), receive_time), id);
@@ -294,6 +310,8 @@ namespace cryptonote
       }else
       {
         LOG_PRINT_L1("tx used wrong inputs, rejected");
+        LOG_PRINT_L0("tx used wrong inputs, rejected"); ////KZV _LOG
+
         tvc.m_verifivation_failed = true;
         tvc.m_invalid_input = true;
         return false;
@@ -348,7 +366,10 @@ namespace cryptonote
           memset(meta.padding, 0, sizeof(meta.padding));
 
           if (!insert_key_images(tx, id, tx_relay))
+          {
+              LOG_PRINT_L0("insert_key_images returned false"); ////KZV _LOG
             return false;
+          }
 
           m_blockchain.remove_txpool_tx(id);
           m_blockchain.add_txpool_tx(id, blob, meta);
@@ -823,6 +844,7 @@ namespace cryptonote
   //---------------------------------------------------------------------------------
   void tx_memory_pool::set_relayed(const epee::span<const crypto::hash> hashes, const relay_method method)
   {
+      LOG_PRINT_L0("tx_memory_pool::set_relayed"); ////KZV _LOG
     crypto::random_poisson_seconds embargo_duration{dandelionpp_embargo_average};
     const auto now = std::chrono::system_clock::now();
     uint64_t next_relay = uint64_t{std::numeric_limits<time_t>::max()};

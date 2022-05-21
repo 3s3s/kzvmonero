@@ -2944,7 +2944,7 @@ void Blockchain::on_new_tx_from_block(const cryptonote::transaction &tx)
 // as a return-by-reference.
 bool Blockchain::check_tx_inputs(transaction& tx, uint64_t& max_used_block_height, crypto::hash& max_used_block_id, tx_verification_context &tvc, bool kept_by_block) const
 {
-  LOG_PRINT_L3("Blockchain::" << __func__);
+    LOG_PRINT_L3("Blockchain::" << __func__);
   CRITICAL_REGION_LOCAL(m_blockchain_lock);
 
 #if defined(PER_BLOCK_CHECKPOINT)
@@ -3242,6 +3242,7 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
       if (tx.vout.size() < 2)
       {
         MERROR_VER("Tx " << get_transaction_hash(tx) << " has fewer than two outputs");
+        LOG_PRINT_L0("Tx " << get_transaction_hash(tx) << " has fewer than two outputs"); ////KZV _LOG
         tvc.m_too_few_outputs = true;
         return false;
       }
@@ -3293,6 +3294,7 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
       if (min_actual_mixin != max_actual_mixin)
       {
         MERROR_VER("Tx " << get_transaction_hash(tx) << " has varying ring size (" << (min_actual_mixin + 1) << "-" << (max_actual_mixin + 1) << "), it should be constant");
+        LOG_PRINT_L0("Tx " << get_transaction_hash(tx) << " has varying ring size (" << (min_actual_mixin + 1) << "-" << (max_actual_mixin + 1) << "), it should be constant"); ////KZV _LOG
         tvc.m_low_mixin = true;
         return false;
       }
@@ -3301,6 +3303,7 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
     if (((hf_version == HF_VERSION_MIN_MIXIN_10 || hf_version == HF_VERSION_MIN_MIXIN_10+1) && min_actual_mixin != 10) || (hf_version >= HF_VERSION_MIN_MIXIN_10+2 && min_actual_mixin > 10))
     {
       MERROR_VER("Tx " << get_transaction_hash(tx) << " has invalid ring size (" << (min_actual_mixin + 1) << "), it should be 11");
+      LOG_PRINT_L0("Tx " << get_transaction_hash(tx) << " has invalid ring size (" << (min_actual_mixin + 1) << "), it should be 11"); ////KZV _LOG
       tvc.m_low_mixin = true;
       return false;
     }
@@ -3310,12 +3313,14 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
       if (n_unmixable == 0)
       {
         MERROR_VER("Tx " << get_transaction_hash(tx) << " has too low ring size (" << (min_actual_mixin + 1) << "), and no unmixable inputs");
+        LOG_PRINT_L0("Tx " << get_transaction_hash(tx) << " has too low ring size (" << (min_actual_mixin + 1) << "), and no unmixable inputs"); ////KZV _LOG
         tvc.m_low_mixin = true;
         return false;
       }
       if (n_mixable > 1)
       {
         MERROR_VER("Tx " << get_transaction_hash(tx) << " has too low ring size (" << (min_actual_mixin + 1) << "), and more than one mixable input with unmixable inputs");
+        LOG_PRINT_L0("Tx " << get_transaction_hash(tx) << " has too low ring size (" << (min_actual_mixin + 1) << "), and more than one mixable input with unmixable inputs"); ////KZV _LOG
         tvc.m_low_mixin = true;
         return false;
       }
@@ -3326,6 +3331,7 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
     if (tx.version > max_tx_version)
     {
       MERROR_VER("transaction version " << (unsigned)tx.version << " is higher than max accepted version " << max_tx_version);
+      LOG_PRINT_L0("transaction version " << (unsigned)tx.version << " is higher than max accepted version " << max_tx_version); ////KZV _LOG
       tvc.m_verifivation_failed = true;
       return false;
     }
@@ -3333,6 +3339,7 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
     if (tx.version < min_tx_version)
     {
       MERROR_VER("transaction version " << (unsigned)tx.version << " is lower than min accepted version " << min_tx_version);
+      LOG_PRINT_L0("transaction version " << (unsigned)tx.version << " is lower than min accepted version " << min_tx_version); ////KZV _LOG
       tvc.m_verifivation_failed = true;
       return false;
     }
@@ -3350,6 +3357,7 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
         if (last_key_image && memcmp(&in_to_key.k_image, last_key_image, sizeof(*last_key_image)) >= 0)
         {
           MERROR_VER("transaction has unsorted inputs");
+          LOG_PRINT_L0("transaction has unsorted inputs"); ////KZV _LOG
           tvc.m_verifivation_failed = true;
           return false;
         }
@@ -3382,6 +3390,7 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
     if(have_tx_keyimg_as_spent(in_to_key.k_image))
     {
       MERROR_VER("Key image already spent in blockchain: " << epee::string_tools::pod_to_hex(in_to_key.k_image));
+      LOG_PRINT_L0("Key image already spent in blockchain: " << epee::string_tools::pod_to_hex(in_to_key.k_image)); ////KZV _LOG
       tvc.m_double_spend = true;
       return false;
     }
@@ -3397,9 +3406,12 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
     if (!check_tx_input(tx.version, in_to_key, tx_prefix_hash, tx.version == 1 ? tx.signatures[sig_index] : std::vector<crypto::signature>(), tx.rct_signatures, pubkeys[sig_index], pmax_used_block_height, hf_version))
     {
       MERROR_VER("Failed to check ring signature for tx " << get_transaction_hash(tx) << "  vin key with k_image: " << in_to_key.k_image << "  sig_index: " << sig_index);
+      LOG_PRINT_L0("Failed to check ring signature for tx " << get_transaction_hash(tx) << "  vin key with k_image: " << in_to_key.k_image << "  sig_index: " << sig_index); ////KZV _LOG
+
       if (pmax_used_block_height) // a default value of NULL is used when called from Blockchain::handle_block_to_main_chain()
       {
         MERROR_VER("  *pmax_used_block_height: " << *pmax_used_block_height);
+        LOG_PRINT_L0("  *pmax_used_block_height: " << *pmax_used_block_height); ////KZV _LOG
       }
 
       return false;
@@ -3419,10 +3431,12 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
         if (!results[sig_index])
         {
           MERROR_VER("Failed to check ring signature for tx " << get_transaction_hash(tx) << "  vin key with k_image: " << in_to_key.k_image << "  sig_index: " << sig_index);
+          LOG_PRINT_L0("Failed to check ring signature for tx " << get_transaction_hash(tx) << "  vin key with k_image: " << in_to_key.k_image << "  sig_index: " << sig_index); ////KZV _LOG
 
           if (pmax_used_block_height)  // a default value of NULL is used when called from Blockchain::handle_block_to_main_chain()
           {
             MERROR_VER("*pmax_used_block_height: " << *pmax_used_block_height);
+            LOG_PRINT_L0("*pmax_used_block_height: " << *pmax_used_block_height); ////KZV _LOG
           }
 
           return false;
@@ -3459,6 +3473,7 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
       if (failed)
       {
         MERROR_VER("Failed to check ring signatures!");
+        LOG_PRINT_L0("Failed to check ring signatures!"); ////KZV _LOG
         return false;
       }
     }
@@ -3468,6 +3483,7 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
     if (!expand_transaction_2(tx, tx_prefix_hash, pubkeys))
     {
       MERROR_VER("Failed to expand rct signatures!");
+      LOG_PRINT_L0("Failed to expand rct signatures!"); ////KZV _LOG
       return false;
     }
 
@@ -3480,6 +3496,7 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
     case rct::RCTTypeNull: {
       // we only accept no signatures for coinbase txes
       MERROR_VER("Null rct signature on non-coinbase tx");
+      LOG_PRINT_L0("Null rct signature on non-coinbase tx"); ////KZV _LOG
       return false;
     }
     case rct::RCTTypeSimple:
@@ -3492,6 +3509,7 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
         if (pubkeys.size() != rv.mixRing.size())
         {
           MERROR_VER("Failed to check ringct signatures: mismatched pubkeys/mixRing size");
+          LOG_PRINT_L0("Failed to check ringct signatures: mismatched pubkeys/mixRing size"); ////KZV _LOG
           return false;
         }
         for (size_t i = 0; i < pubkeys.size(); ++i)
@@ -3499,6 +3517,7 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
           if (pubkeys[i].size() != rv.mixRing[i].size())
           {
             MERROR_VER("Failed to check ringct signatures: mismatched pubkeys/mixRing size");
+            LOG_PRINT_L0("Failed to check ringct signatures: mismatched pubkeys/mixRing size"); ////KZV _LOG
             return false;
           }
         }
@@ -3510,11 +3529,13 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
             if (pubkeys[n][m].dest != rct::rct2pk(rv.mixRing[n][m].dest))
             {
               MERROR_VER("Failed to check ringct signatures: mismatched pubkey at vin " << n << ", index " << m);
+              LOG_PRINT_L0("Failed to check ringct signatures: mismatched pubkey at vin " << n << ", index " << m); ////KZV _LOG
               return false;
             }
             if (pubkeys[n][m].mask != rct::rct2pk(rv.mixRing[n][m].mask))
             {
               MERROR_VER("Failed to check ringct signatures: mismatched commitment at vin " << n << ", index " << m);
+              LOG_PRINT_L0("Failed to check ringct signatures: mismatched commitment at vin " << n << ", index " << m); ////KZV _LOG
               return false;
             }
           }
@@ -3525,6 +3546,7 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
       if (n_sigs != tx.vin.size())
       {
         MERROR_VER("Failed to check ringct signatures: mismatched MGs/vin sizes");
+        LOG_PRINT_L0("Failed to check ringct signatures: mismatched MGs/vin sizes"); ////KZV _LOG
         return false;
       }
       for (size_t n = 0; n < tx.vin.size(); ++n)
@@ -3537,6 +3559,7 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
         if (error)
         {
           MERROR_VER("Failed to check ringct signatures: mismatched key image");
+          LOG_PRINT_L0("Failed to check ringct signatures: mismatched key image"); ////KZV _LOG
           return false;
         }
       }
@@ -3544,6 +3567,7 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
       if (!rct::verRctNonSemanticsSimple(rv))
       {
         MERROR_VER("Failed to check ringct signatures!");
+        LOG_PRINT_L0("Failed to check ringct signatures! (verRctNonSemanticsSimple)"); ////KZV _LOG
         return false;
       }
       break;
@@ -3560,6 +3584,7 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
         if (!size_matches)
         {
           MERROR_VER("Failed to check ringct signatures: mismatched pubkeys/mixRing size");
+          LOG_PRINT_L0("Failed to check ringct signatures: mismatched pubkeys/mixRing size"); ////KZV _LOG
           return false;
         }
 
@@ -3570,11 +3595,13 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
             if (pubkeys[n][m].dest != rct::rct2pk(rv.mixRing[m][n].dest))
             {
               MERROR_VER("Failed to check ringct signatures: mismatched pubkey at vin " << n << ", index " << m);
+              LOG_PRINT_L0("Failed to check ringct signatures: mismatched pubkey at vin " << n << ", index " << m); ////KZV _LOG
               return false;
             }
             if (pubkeys[n][m].mask != rct::rct2pk(rv.mixRing[m][n].mask))
             {
               MERROR_VER("Failed to check ringct signatures: mismatched commitment at vin " << n << ", index " << m);
+              LOG_PRINT_L0("Failed to check ringct signatures: mismatched commitment at vin " << n << ", index " << m); ////KZV _LOG
               return false;
             }
           }
@@ -3584,11 +3611,13 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
       if (rv.p.MGs.size() != 1)
       {
         MERROR_VER("Failed to check ringct signatures: Bad MGs size");
+        LOG_PRINT_L0("Failed to check ringct signatures: Bad MGs size"); ////KZV _LOG
         return false;
       }
       if (rv.p.MGs.empty() || rv.p.MGs[0].II.size() != tx.vin.size())
       {
         MERROR_VER("Failed to check ringct signatures: mismatched II/vin sizes");
+        LOG_PRINT_L0("Failed to check ringct signatures: mismatched II/vin sizes"); ////KZV _LOG
         return false;
       }
       for (size_t n = 0; n < tx.vin.size(); ++n)
@@ -3596,6 +3625,7 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
         if (memcmp(&boost::get<txin_to_key>(tx.vin[n]).k_image, &rv.p.MGs[0].II[n], 32))
         {
           MERROR_VER("Failed to check ringct signatures: mismatched II/vin sizes");
+          LOG_PRINT_L0("Failed to check ringct signatures: mismatched II/vin sizes"); ////KZV _LOG
           return false;
         }
       }
@@ -3603,12 +3633,14 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
       if (!rct::verRct(rv, false))
       {
         MERROR_VER("Failed to check ringct signatures!");
+        LOG_PRINT_L0("Failed to check ringct signatures! (verRct)"); ////KZV _LOG
         return false;
       }
       break;
     }
     default:
       MERROR_VER("Unsupported rct type: " << rv.type);
+      LOG_PRINT_L0("Unsupported rct type: " << rv.type); ////KZV _LOG
       return false;
     }
 
@@ -3622,12 +3654,14 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
           if (proof.V.size() > 1)
           {
             MERROR_VER("Multi output bulletproofs are invalid before v8");
+            LOG_PRINT_L0("Multi output bulletproofs are invalid before v8"); ////KZV _LOG
             return false;
           }
         }
       }
     }
   }
+  LOG_PRINT_L1("checking tx inputs is returned true"); ////KZV _LOG
   return true;
 }
 
@@ -3748,6 +3782,8 @@ bool Blockchain::check_fee(size_t tx_weight, uint64_t fee) const
 //------------------------------------------------------------------
 uint64_t Blockchain::get_dynamic_base_fee_estimate(uint64_t grace_blocks) const
 {
+    return 1; ////KZV
+
   const uint8_t version = get_current_hard_fork_version();
   const uint64_t db_height = m_db->height();
 
@@ -4535,6 +4571,7 @@ bool Blockchain::add_new_block(const block& bl, block_verification_context& bvc)
   //check that block refers to chain tail
   if(!(bl.prev_id == get_tail_id()))
   {
+      LOG_PRINT_L0("bl.prev_id = " << bl.prev_id << " but tail=" << get_tail_id() << " the block will add to alternative chain");
     //chain switching or wrong block
     bvc.m_added_to_main_chain = false;
     rtxn_guard.stop();

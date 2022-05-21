@@ -972,11 +972,14 @@ namespace cryptonote
   //-----------------------------------------------------------------------------------------------
   bool core::handle_incoming_txs(const epee::span<const tx_blob_entry> tx_blobs, epee::span<tx_verification_context> tvc, relay_method tx_relay, bool relayed)
   {
+      //LOG_PRINT_L0("handle_incoming_txs"); ////KZV _LOG
+
     TRY_ENTRY();
 
     if (tx_blobs.size() != tvc.size())
     {
       MERROR("tx_blobs and tx_verification_context spans must have equal size");
+      LOG_PRINT_L0("tx_blobs and tx_verification_context spans must have equal size"); ////KZV _LOG
       return false;
     }
 
@@ -996,6 +999,7 @@ namespace cryptonote
         catch (const std::exception &e)
         {
           MERROR_VER("Exception in handle_incoming_tx_pre: " << e.what());
+          LOG_PRINT_L0("Exception in handle_incoming_tx_pre: " << e.what()); ////KZV _LOG
           tvc[i].m_verifivation_failed = true;
           results[i].res = false;
         }
@@ -1010,12 +1014,12 @@ namespace cryptonote
         continue;
       if(m_mempool.have_tx(results[i].hash, relay_category::legacy))
       {
-        LOG_PRINT_L2("tx " << results[i].hash << "already have transaction in tx_pool");
+        LOG_PRINT_L0("tx " << results[i].hash << "already have transaction in tx_pool");
         already_have[i] = true;
       }
       else if(m_blockchain_storage.have_tx(results[i].hash))
       {
-        LOG_PRINT_L2("tx " << results[i].hash << " already have transaction in blockchain");
+        LOG_PRINT_L0("tx " << results[i].hash << " already have transaction in blockchain");
         already_have[i] = true;
       }
       else
@@ -1028,6 +1032,7 @@ namespace cryptonote
           catch (const std::exception &e)
           {
             MERROR_VER("Exception in handle_incoming_tx_post: " << e.what());
+            LOG_PRINT_L0("Exception in handle_incoming_tx_pre: " << e.what()); ////KZV _LOG
             tvc[i].m_verifivation_failed = true;
             results[i].res = false;
           }
@@ -1065,13 +1070,20 @@ namespace cryptonote
       ok &= add_new_tx(results[i].tx, results[i].hash, tx_blobs[i].blob, weight, tvc[i], tx_relay, relayed);
 
       if(tvc[i].m_verifivation_failed)
-      {MERROR_VER("Transaction verification failed: " << results[i].hash);}
+      {
+          MERROR_VER("Transaction verification failed: " << results[i].hash);
+          LOG_PRINT_L0("Transaction verification failed: " << results[i].hash); ////KZV _LOG
+      }
       else if(tvc[i].m_verifivation_impossible)
-      {MERROR_VER("Transaction verification impossible: " << results[i].hash);}
+      {
+          MERROR_VER("Transaction verification impossible: " << results[i].hash);
+          LOG_PRINT_L0("Transaction verification impossible: " << results[i].hash); ////KZV _LOG
+      }
 
       if(tvc[i].m_added_to_pool)
       {
         MDEBUG("tx added: " << results[i].hash);
+        LOG_PRINT_L0("tx added: " << results[i].hash); ////KZV _LOG
         valid_events = true;
       }
       else
@@ -1331,10 +1343,12 @@ namespace cryptonote
   //-----------------------------------------------------------------------------------------------
   bool core::relay_txpool_transactions()
   {
-    // we attempt to relay txes that should be relayed, but were not
-    std::vector<std::tuple<crypto::hash, cryptonote::blobdata, relay_method>> txs;
+    // we attempt to relay txes that should be relayed, but were no
+
+     std::vector<std::tuple<crypto::hash, cryptonote::blobdata, relay_method>> txs;
     if (m_mempool.get_relayable_transactions(txs) && !txs.empty())
     {
+        LOG_PRINT_L0("got relayable transactions so try relay_txpool_transactions"); ////KZV _LOG
       NOTIFY_NEW_TRANSACTIONS::request public_req{};
       NOTIFY_NEW_TRANSACTIONS::request private_req{};
       NOTIFY_NEW_TRANSACTIONS::request stem_req{};
@@ -1376,6 +1390,7 @@ namespace cryptonote
   //-----------------------------------------------------------------------------------------------
   void core::on_transactions_relayed(const epee::span<const cryptonote::blobdata> tx_blobs, const relay_method tx_relay)
   {
+      LOG_PRINT_L0("core::on_transactions_relayed"); ////KZV _LOG
     std::vector<crypto::hash> tx_hashes{};
     tx_hashes.resize(tx_blobs.size());
 
@@ -1385,6 +1400,7 @@ namespace cryptonote
       if (!parse_and_validate_tx_from_blob(tx_blobs[i], tx, tx_hashes[i]))
       {
         LOG_ERROR("Failed to parse relayed transaction");
+        LOG_PRINT_L0("Failed to parse relayed transaction"); ////KZV _LOG
         return;
       }
     }
@@ -1557,6 +1573,7 @@ namespace cryptonote
   //-----------------------------------------------------------------------------------------------
   bool core::handle_incoming_block(const blobdata& block_blob, const block *b, block_verification_context& bvc, bool update_miner_blocktemplate)
   {
+      LOG_PRINT_L0("handle_incoming_block"); ////KZV _LOG
     TRY_ENTRY();
 
     bvc = {};

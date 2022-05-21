@@ -1541,6 +1541,7 @@ namespace tools
   //------------------------------------------------------------------------------------------------------------------------------
   bool wallet_rpc_server::on_relay_tx(const wallet_rpc::COMMAND_RPC_RELAY_TX::request& req, wallet_rpc::COMMAND_RPC_RELAY_TX::response& res, epee::json_rpc::error& er, const connection_context *ctx)
   {
+      LOG_PRINT_L0("wallet_rpc_server::on_relay_tx"); ////KZV _LOG
     if (!m_wallet) return not_open(er);
 
     cryptonote::blobdata blob;

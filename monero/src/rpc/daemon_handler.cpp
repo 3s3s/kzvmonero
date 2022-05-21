@@ -361,10 +361,12 @@ namespace rpc
 
   void DaemonHandler::handleTxBlob(std::string&& tx_blob, bool relay, SendRawTx::Response& res)
   {
+      LOG_PRINT_L0("DaemonHandler::handleTxBlob"); ////KZV _LOG
     if (!m_p2p.get_payload_object().is_synchronized())
     {
       res.status = Message::STATUS_FAILED;
       res.error_details = "Not ready to accept transactions; try again later";
+      LOG_PRINT_L0("Not ready to accept transactions; try again later"); ////KZV _LOG
       return;
     }
 
@@ -375,10 +377,12 @@ namespace rpc
       if (tvc.m_verifivation_failed)
       {
         MERROR("[SendRawTx]: tx verification failed");
+        LOG_PRINT_L0("[SendRawTx]: tx verification failed"); ////KZV _LOG
       }
       else
       {
         MERROR("[SendRawTx]: Failed to process tx");
+        LOG_PRINT_L0("[SendRawTx]: Failed to process tx"); ////KZV _LOG
       }
       res.status = Message::STATUS_FAILED;
       res.error_details = "";
@@ -427,12 +431,15 @@ namespace rpc
         res.error_details = "an unknown issue was found with the transaction";
       }
 
+      LOG_PRINT_L0("DaemonHandler::handleTxBlob " << res.error_details); ////KZV _LOG
+
       return;
     }
 
     if(tvc.m_relay == relay_method::none || !relay)
     {
       MERROR("[SendRawTx]: tx accepted, but not relayed");
+      LOG_PRINT_L0("[SendRawTx]: tx accepted, but not relayed"); ////KZV _LOG
       res.error_details = "Not relayed";
       res.relayed = false;
       res.status = Message::STATUS_OK;

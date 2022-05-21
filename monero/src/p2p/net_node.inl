@@ -728,7 +728,8 @@ namespace nodetool
       return get_ip_seed_nodes();
     }
 
-    return get_ip_seed_nodes();
+    if (m_seed_nodes_list.size() == 0)
+        return get_ip_seed_nodes();
     //////////////////////
 
     std::set<std::string> full_addrs;
@@ -1756,8 +1757,9 @@ namespace nodetool
         pe_seed.adr = server.m_seed_nodes[current_index];
         if (is_peer_used(pe_seed))
           is_connected_to_at_least_one_seed_node = true;
-        else if (try_to_connect_and_handshake_with_new_peer(server.m_seed_nodes[current_index], true))
-          break;
+        //else if (try_to_connect_and_handshake_with_new_peer(server.m_seed_nodes[current_index], true))
+        else if (try_to_connect_and_handshake_with_new_peer(server.m_seed_nodes[current_index], false)) ////KZV
+           break;
         if(++try_count > server.m_seed_nodes.size())
         {
           // only IP zone has fallback (to direct IP) seeds
@@ -2246,6 +2248,9 @@ namespace nodetool
   epee::net_utils::zone node_server<t_payload_net_handler>::send_txs(std::vector<cryptonote::blobdata> txs, const epee::net_utils::zone origin, const boost::uuids::uuid& source, const cryptonote::relay_method tx_relay)
   {
     namespace enet = epee::net_utils;
+
+    std::cout << "net_utils::send_txs\n"; ////KZV _LOG
+
 
     const auto send = [&txs, &source, tx_relay] (std::pair<const enet::zone, network_zone>& network)
     {
