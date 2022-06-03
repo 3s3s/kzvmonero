@@ -2851,18 +2851,27 @@ skip:
     // if we already have a few peers on this stripe, but none on next one, try next one
     unsigned int n_next = 0, n_subsequent = 0, n_others = 0;
     const uint32_t subsequent_pruning_stripe = 1 + next_pruning_stripe % (1<<CRYPTONOTE_PRUNING_LOG_STRIPES);
-    m_p2p->for_each_connection([&](const connection_context &context, nodetool::peerid_type peer_id, uint32_t support_flags) {
-      if (context.m_state >= cryptonote_connection_context::state_synchronizing)
-      {
-        if (context.m_pruning_seed == 0 || tools::get_pruning_stripe(context.m_pruning_seed) == next_pruning_stripe)
-          ++n_next;
-        else if (tools::get_pruning_stripe(context.m_pruning_seed) == subsequent_pruning_stripe)
-          ++n_subsequent;
-        else
-          ++n_others;
-      }
-      return true;
-    });
+    ////KZV
+    try {
+        m_p2p->for_each_connection([&](const connection_context &context, nodetool::peerid_type peer_id, uint32_t support_flags) {
+          if (context.m_state >= cryptonote_connection_context::state_synchronizing)
+          {
+            if (context.m_pruning_seed == 0 || tools::get_pruning_stripe(context.m_pruning_seed) == next_pruning_stripe)
+              ++n_next;
+            else if (tools::get_pruning_stripe(context.m_pruning_seed) == subsequent_pruning_stripe)
+              ++n_subsequent;
+            else
+              ++n_others;
+          }
+          return true;
+        });
+    }
+    catch(...)
+    {
+        LOG_PRINT_L0("some errors in cryptonote_protocol_handler");
+    }
+
+    ////
     const bool use_next = (n_next > m_max_out_peers / 2 && n_subsequent <= 1) || (n_next > 2 && n_subsequent == 0);
     const uint32_t ret_stripe = use_next ? subsequent_pruning_stripe: next_pruning_stripe;
     MIDEBUG(const std::string po = get_peers_overview(), "get_next_needed_pruning_stripe: want height " << want_height << " (" <<

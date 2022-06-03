@@ -253,6 +253,10 @@ namespace tools
       if (read <= 0) return false;
 
       data = addr_data.substr(read);
+
+      //std::string buf1 = get_varint_data((uint64_t)0xb4);
+      //std::string buf2 = get_varint_data((uint64_t)0xb5);
+      //std::cout << "0xb4" << encode(buf1) << "0xb4" << encode(buf2);
       return true;
     }
   }

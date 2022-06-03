@@ -588,7 +588,7 @@ bool WalletImpl::recoverFromKeysWithPassword(const std::string &path,
     cryptonote::address_parse_info info;
     if(!get_account_address_from_str(info, m_wallet->nettype(), address_string))
     {
-        setStatusError(tr("failed to parse address"));
+        setStatusError(tr("failed to parse address (WalletImpl::recoverFromKeysWithPassword)"));
         return false;
     }
 

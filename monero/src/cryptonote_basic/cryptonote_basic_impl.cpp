@@ -223,6 +223,7 @@ namespace cryptonote {
       if (!tools::base58::decode_addr(str, prefix, data))
       {
         LOG_PRINT_L2("Invalid address format");
+        std::cout << "failed to parse address (simple_wallet::init)";
         return false;
       }
 
@@ -245,6 +246,8 @@ namespace cryptonote {
         LOG_PRINT_L1("Wrong address prefix: " << prefix << ", expected " << address_prefix 
           << " or " << integrated_address_prefix
           << " or " << subaddress_prefix);
+
+        std::cout << "Wrong address prefix: " << prefix << ", expected " << address_prefix << " or " << integrated_address_prefix << " or " << subaddress_prefix;
         return false;
       }
 
@@ -254,6 +257,7 @@ namespace cryptonote {
         if (!::serialization::parse_binary(data, iadr))
         {
           LOG_PRINT_L1("Account public address keys can't be parsed");
+          std::cout << "Account public address keys can't be parsed";
           return false;
         }
         info.address = iadr.adr;
@@ -264,6 +268,7 @@ namespace cryptonote {
         if (!::serialization::parse_binary(data, info.address))
         {
           LOG_PRINT_L1("Account public address keys can't be parsed");
+          std::cout << "Account public address keys can't be parsed";
           return false;
         }
       }
@@ -271,6 +276,7 @@ namespace cryptonote {
       if (!crypto::check_key(info.address.m_spend_public_key) || !crypto::check_key(info.address.m_view_public_key))
       {
         LOG_PRINT_L1("Failed to validate address keys");
+        std::cout << "Failed to validate address keys";
         return false;
       }
     }
@@ -284,6 +290,7 @@ namespace cryptonote {
       if(buff.size()!=sizeof(public_address_outer_blob))
       {
         LOG_PRINT_L1("Wrong public address size: " << buff.size() << ", expected size: " << sizeof(public_address_outer_blob));
+        std::cout << "Wrong public address size: " << buff.size() << ", expected size: " << sizeof(public_address_outer_blob);
         return false;
       }
 
@@ -293,12 +300,14 @@ namespace cryptonote {
       if(blob.m_ver > CRYPTONOTE_PUBLIC_ADDRESS_TEXTBLOB_VER)
       {
         LOG_PRINT_L1("Unknown version of public address: " << blob.m_ver << ", expected " << CRYPTONOTE_PUBLIC_ADDRESS_TEXTBLOB_VER);
+        std::cout << "Unknown version of public address: " << blob.m_ver << ", expected " << CRYPTONOTE_PUBLIC_ADDRESS_TEXTBLOB_VER;
         return false;
       }
 
       if(blob.check_sum != get_account_address_checksum(blob))
       {
         LOG_PRINT_L1("Wrong public address checksum");
+        std::cout << "Wrong public address checksum";
         return false;
       }
 

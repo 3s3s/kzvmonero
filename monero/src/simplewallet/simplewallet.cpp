@@ -940,7 +940,7 @@ bool simple_wallet::print_fee_info(const std::vector<std::string> &args/* = std:
   std::vector<uint64_t> fees;
   for (uint32_t priority = 1; priority <= 4; ++priority)
   {
-    uint64_t mult = m_wallet->get_fee_multiplier(priority);
+    uint64_t mult = m_wallet->get_fee_multiplier(priority); ////KZV return 1////
     fees.push_back(base_fee * typical_size * mult);
   }
   std::vector<std::pair<uint64_t, uint64_t>> blocks;
@@ -4196,7 +4196,7 @@ bool simple_wallet::init(const boost::program_options::variables_map& vm)
       cryptonote::address_parse_info info;
       if(!get_account_address_from_str(info, nettype, address_string))
       {
-          fail_msg_writer() << tr("failed to parse address");
+          fail_msg_writer() << tr("failed to parse address (simple_wallet::init)");
           return false;
       }
       if (info.is_subaddress)
@@ -4273,7 +4273,7 @@ bool simple_wallet::init(const boost::program_options::variables_map& vm)
       cryptonote::address_parse_info info;
       if(!get_account_address_from_str(info, nettype, address_string))
       {
-          fail_msg_writer() << tr("failed to parse address");
+          fail_msg_writer() << tr("failed to parse address (simple_wallet::init) 2");
           return false;
       }
       if (info.is_subaddress)
@@ -4382,7 +4382,7 @@ bool simple_wallet::init(const boost::program_options::variables_map& vm)
       cryptonote::address_parse_info info;
       if(!get_account_address_from_str(info, nettype, address_string))
       {
-          fail_msg_writer() << tr("failed to parse address");
+          fail_msg_writer() << tr("failed to parse address (simple_wallet::init) 3");
           return false;
       }
       
@@ -6607,7 +6607,7 @@ bool simple_wallet::transfer_main(int transfer_type, const std::vector<std::stri
 
     if (!r)
     {
-      fail_msg_writer() << tr("failed to parse address");
+      fail_msg_writer() << tr("failed to parse address (simple_wallet::transfer_main)");
       return false;
     }
     de.addr = info.address;
@@ -6680,7 +6680,7 @@ bool simple_wallet::transfer_main(int transfer_type, const std::vector<std::stri
 
     if (ptx_vector.empty())
     {
-      fail_msg_writer() << tr("No outputs found, or daemon is not ready");
+      fail_msg_writer() << tr("No outputs found, or daemon is not ready (1)");
       return false;
     }
 
@@ -7188,7 +7188,7 @@ bool simple_wallet::sweep_main(uint32_t account, uint64_t below, bool locked, co
   cryptonote::address_parse_info info;
   if (!cryptonote::get_account_address_from_str_or_url(info, m_wallet->nettype(), local_args[0], oa_prompter))
   {
-    fail_msg_writer() << tr("failed to parse address");
+    fail_msg_writer() << tr("failed to parse address (simple_wallet::sweep_main)");
     print_usage();
     return true;
   }
@@ -7221,7 +7221,7 @@ bool simple_wallet::sweep_main(uint32_t account, uint64_t below, bool locked, co
 
     if (ptx_vector.empty())
     {
-      fail_msg_writer() << tr("No outputs found, or daemon is not ready");
+      fail_msg_writer() << tr("No outputs found, or daemon is not ready (2)");
       return true;
     }
 
@@ -7447,7 +7447,7 @@ bool simple_wallet::sweep_single(const std::vector<std::string> &args_)
   cryptonote::address_parse_info info;
   if (!cryptonote::get_account_address_from_str_or_url(info, m_wallet->nettype(), local_args[1], oa_prompter))
   {
-    fail_msg_writer() << tr("failed to parse address");
+    fail_msg_writer() << tr("failed to parse address (simple_wallet::sweep_single)");
     return true;
   }
 
@@ -8084,7 +8084,7 @@ bool simple_wallet::get_tx_proof(const std::vector<std::string> &args)
   cryptonote::address_parse_info info;
   if(!cryptonote::get_account_address_from_str_or_url(info, m_wallet->nettype(), args[1], oa_prompter))
   {
-    fail_msg_writer() << tr("failed to parse address");
+    fail_msg_writer() << tr("failed to parse address (simple_wallet::get_tx_proof)");
     return true;
   }
 
@@ -8152,7 +8152,7 @@ bool simple_wallet::check_tx_key(const std::vector<std::string> &args_)
   cryptonote::address_parse_info info;
   if(!cryptonote::get_account_address_from_str_or_url(info, m_wallet->nettype(), local_args[2], oa_prompter))
   {
-    fail_msg_writer() << tr("failed to parse address");
+    fail_msg_writer() << tr("failed to parse address (simple_wallet::check_tx_key)");
     return true;
   }
 
@@ -8216,7 +8216,7 @@ bool simple_wallet::check_tx_proof(const std::vector<std::string> &args)
   cryptonote::address_parse_info info;
   if(!cryptonote::get_account_address_from_str_or_url(info, m_wallet->nettype(), args[1], oa_prompter))
   {
-    fail_msg_writer() << tr("failed to parse address");
+    fail_msg_writer() << tr("failed to parse address (simple_wallet::check_tx_proof)");
     return true;
   }
 
@@ -8420,7 +8420,7 @@ bool simple_wallet::check_reserve_proof(const std::vector<std::string> &args)
   cryptonote::address_parse_info info;
   if(!cryptonote::get_account_address_from_str_or_url(info, m_wallet->nettype(), args[0], oa_prompter))
   {
-    fail_msg_writer() << tr("failed to parse address");
+    fail_msg_writer() << tr("failed to parse address (simple_wallet::check_reserve_proof)");
     return true;
   }
   if (info.is_subaddress)
@@ -9718,7 +9718,7 @@ bool simple_wallet::address_book(const std::vector<std::string> &args/* = std::v
     cryptonote::address_parse_info info;
     if(!cryptonote::get_account_address_from_str_or_url(info, m_wallet->nettype(), args[1], oa_prompter))
     {
-      fail_msg_writer() << tr("failed to parse address");
+      fail_msg_writer() << tr("failed to parse address (simple_wallet::address_book)");
       return true;
     }
     size_t description_start = 2;
@@ -9987,7 +9987,7 @@ bool simple_wallet::verify(const std::vector<std::string> &args)
   cryptonote::address_parse_info info;
   if(!cryptonote::get_account_address_from_str_or_url(info, m_wallet->nettype(), address_string, oa_prompter))
   {
-    fail_msg_writer() << tr("failed to parse address");
+    fail_msg_writer() << tr("failed to parse address (simple_wallet::verify)");
     return true;
   }
 
