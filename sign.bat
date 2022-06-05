@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DISTR_VERSION=0.17.2.5
+DISTR_VERSION=0.17.2.6
 SIGNER1=usdxsec
 SIGNER2=usdx2sec
 
