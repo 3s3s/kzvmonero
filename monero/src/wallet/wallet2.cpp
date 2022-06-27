@@ -8149,9 +8149,14 @@ void wallet2::get_outs(std::vector<std::vector<tools::wallet2::get_outs_entry>> 
         has_rct = true;
         max_rct_index = std::max(max_rct_index, m_transfers[idx].m_global_output_index);
       }
-    const bool has_rct_distribution = has_rct && (!rct_offsets.empty() || get_rct_distribution(rct_start_height, rct_offsets));
+
+    ////KZV//// disable has_rct_distribution for network with small amount of transactions. may be enabled in future
+    const bool has_rct_distribution = false; //has_rct && (!rct_offsets.empty() || get_rct_distribution(rct_start_height, rct_offsets));
+    //const bool has_rct_distribution = has_rct && (!rct_offsets.empty() || get_rct_distribution(rct_start_height, rct_offsets));
+    ////////
     if (has_rct_distribution)
     {
+        LOG_PRINT_L2("rct_offsets.back() = " << rct_offsets.back() << "; max_rct_index = " << max_rct_index);
       // check we're clear enough of rct start, to avoid corner cases below
       THROW_WALLET_EXCEPTION_IF(rct_offsets.size() <= CRYPTONOTE_DEFAULT_TX_SPENDABLE_AGE,
           error::get_output_distribution, "Not enough rct outputs");

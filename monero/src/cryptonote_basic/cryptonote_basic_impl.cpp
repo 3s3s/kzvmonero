@@ -223,7 +223,7 @@ namespace cryptonote {
       if (!tools::base58::decode_addr(str, prefix, data))
       {
         LOG_PRINT_L2("Invalid address format");
-        std::cout << "failed to parse address (simple_wallet::init)";
+        std::cout << "Invalid address format (simple_wallet::init) (" << str << ")";
         return false;
       }
 

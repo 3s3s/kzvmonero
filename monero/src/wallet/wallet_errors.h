@@ -476,7 +476,7 @@ namespace tools
     struct not_enough_money : public transfer_error
     {
       explicit not_enough_money(std::string&& loc, uint64_t available, uint64_t tx_amount, uint64_t fee)
-        : transfer_error(std::move(loc), "not enough money")
+        : transfer_error(std::move(loc), std::string("not enough money: available=")+std::to_string(available)+ std::string("; tx_amount=")+std::to_string(tx_amount)+std::string("; fee=")+std::to_string(fee))
         , m_available(available)
         , m_tx_amount(tx_amount)
       {

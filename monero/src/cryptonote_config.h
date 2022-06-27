@@ -296,6 +296,7 @@ namespace cryptonote
     TESTNET,
     STAGENET,
     FAKECHAIN,
+    USDX,
     UNDEFINED = 255
   };
   struct config_t
