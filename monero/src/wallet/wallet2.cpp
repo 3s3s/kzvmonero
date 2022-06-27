@@ -8124,7 +8124,11 @@ void wallet2::get_outs(std::vector<std::vector<tools::wallet2::get_outs_entry>> 
   LOG_PRINT_L2("fake_outputs_count: " << fake_outputs_count);
   outs.clear();
 
-  if(m_light_wallet && fake_outputs_count > 0) {
+  ////KZV//// disable has_rct_distribution for network with small amount of transactions. may be enabled in future
+  //if(m_light_wallet && fake_outputs_count > 0) {
+  if (fake_outputs_count > 0) {
+  ////////
+
     light_wallet_get_outs(outs, selected_transfers, fake_outputs_count);
     return;
   }
@@ -8150,10 +8154,8 @@ void wallet2::get_outs(std::vector<std::vector<tools::wallet2::get_outs_entry>> 
         max_rct_index = std::max(max_rct_index, m_transfers[idx].m_global_output_index);
       }
 
-    ////KZV//// disable has_rct_distribution for network with small amount of transactions. may be enabled in future
-    const bool has_rct_distribution = false; //has_rct && (!rct_offsets.empty() || get_rct_distribution(rct_start_height, rct_offsets));
-    //const bool has_rct_distribution = has_rct && (!rct_offsets.empty() || get_rct_distribution(rct_start_height, rct_offsets));
-    ////////
+    const bool has_rct_distribution = has_rct && (!rct_offsets.empty() || get_rct_distribution(rct_start_height, rct_offsets));
+
     if (has_rct_distribution)
     {
         LOG_PRINT_L2("rct_offsets.back() = " << rct_offsets.back() << "; max_rct_index = " << max_rct_index);
