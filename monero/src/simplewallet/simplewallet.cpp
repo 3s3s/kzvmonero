@@ -537,7 +537,7 @@ void simple_wallet::handle_transfer_exception(const std::exception_ptr &e, bool 
     }
     catch (const tools::error::no_connection_to_daemon&)
     {
-      fail_msg_writer() << sw::tr("no connection to daemon 1. Please make sure daemon is running.");
+      fail_msg_writer() << sw::tr("no connection to daemon (1). Please make sure daemon is running.");
     }
     catch (const tools::error::daemon_busy&)
     {
